@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THRIVER | The Movement</title>
+    
+    <link rel="icon" href="assets/logo.png" type="image/x-icon">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           CORE VARIABLES & RESET
+           ========================================= */
+        :root {
+            --bg-dark: #020202;
+            --bg-panel: #0a0a0a;
+            --bg-lighter: #111111;
+            --text-main: #f5f5f5;
+            --text-muted: #777777;
+            --text-dark: #333333;
+            --accent: #e60000;
+            --accent-glow: rgba(230, 0, 0, 0.4);
+            --border-light: rgba(255, 255, 255, 0.08);
+            --transition-fast: 0.3s ease;
+            --transition-smooth: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 70%);
+        }
+
+        /* Skrivanje scrollbara za sick clean look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-main); }
+
+        /* =========================================
+           PRELOADER
+           ========================================= */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--bg-dark); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+        .loader-logo {
+            font-family: 'Bebas Neue', sans-serif; font-size: 5rem; letter-spacing: 10px;
+            color: var(--text-main); animation: pulseLoader 1.5s infinite alternate;
+        }
+        @keyframes pulseLoader {
+            0% { opacity: 0.3; transform: scale(0.95) blur(2px); text-shadow: 0 0 0 var(--accent); }
+            100% { opacity: 1; transform: scale(1) blur(0); text-shadow: 0 0 30px var(--accent-glow); }
+        }
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 5%; z-index: 1000;
+            background: rgba(2, 2, 2, 0.8);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition-smooth);
+        }
+        nav.scrolled { padding: 15px 5%; background: rgba(2, 2, 2, 0.95); }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 4px;
+            color: var(--text-main); text-transform: uppercase; text-decoration: none;
+            position: relative;
+        }
+        .logo::after {
+            content: '®'; position: absolute; top: 5px; right: -15px; font-size: 0.8rem; color: var(--accent);
+        }
+
+        .nav-controls { display: flex; gap: 30px; align-items: center; }
+        
+        .cart-toggle {
+            color: var(--text-main); text-decoration: none; font-size: 1.5rem;
+            position: relative; transition: var(--transition-fast);
+            display: flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px; border-radius: 50%; background: var(--bg-panel);
+            border: 1px solid var(--border-light);
+        }
+        .cart-toggle:hover { color: var(--accent); border-color: var(--accent); transform: scale(1.05); box-shadow: 0 0 20px var(--accent-glow); }
+        
+        #cartCount {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 800;
+            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* =========================================
+           HERO SPLIT SECTION (CAROUSEL + CONFIG)
+           ========================================= */
+        .hero-split {
+            min-height: 100vh; display: flex; padding: 120px 5% 50px;
+            max-width: 1600px; margin: 0 auto; gap: 50px; align-items: center;
+        }
+
+        /* Left: Carousel */
+        .gallery-container {
+            flex: 1; position: relative; display: flex; flex-direction: column; gap: 20px;
+        }
+        .main-image-wrapper {
+            width: 100%; height: 65vh; background: var(--bg-panel); border-radius: 20px;
+            border: 1px solid var(--border-light); overflow: hidden;
+            display: flex; justify-content: center; align-items: center; position: relative;
+        }
+        .main-image-wrapper::before {
+            content: "THRIVER"; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); font-family: 'Bebas Neue', sans-serif;
+            font-size: 15vw; color: rgba(255,255,255,0.02); z-index: 0; pointer-events: none;
+        }
+        #mainGalleryImage {
+            max-width: 90%; max-height: 90%; object-fit: contain; z-index: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .gallery-nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--border-light);
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            z-index: 2; backdrop-filter: blur(5px); transition: var(--transition-fast);
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        }
+        .gallery-nav-btn:hover { background: var(--accent); border-color: var(--accent); }
+        .prev-btn { left: 20px; } .next-btn { right: 20px; }
+
+        .thumbnail-strip { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .thumb-img {
+            width: 80px; height: 80px; object-fit: cover; border-radius: 10px;
+            background: var(--bg-panel); border: 2px solid transparent;
+            cursor: pointer; transition: var(--transition-fast); opacity: 0.5;
+        }
+        .thumb-img:hover { opacity: 0.8; }
+        .thumb-img.active { border-color: var(--text-main); opacity: 1; transform: scale(1.05); }
+
+        /* Right: Configurator */
+        .product-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        
+        .badge {
+            display: inline-table; background: rgba(230,0,0,0.1); border: 1px solid var(--accent);
+            color: var(--accent); padding: 5px 15px; font-size: 0.8rem; font-weight: 800;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--accent-glow); animation: pulseBadge 2s infinite;
+        }
+        @keyframes pulseBadge { 0% { box-shadow: 0 0 0 0 var(--accent-glow); } 70% { box-shadow: 0 0 0 10px rgba(230,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(230,0,0,0); } }
+
+        .product-title {
+            font-family: 'Bebas Neue', sans-serif; font-size: 5rem; line-height: 0.9;
+            letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .product-desc { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; max-width: 500px; }
+
+        /* Timer in Right Panel */
+        .timer-box {
+            background: var(--bg-panel); border: 1px solid var(--border-light);
+            border-radius: 12px; padding: 20px; display: flex; justify-content: space-around;
+            margin-bottom: 40px; position: relative; overflow: hidden;
+        }
+        .timer-box::after { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .time-col { display: flex; flex-direction: column; align-items: center; }
+        .time-val { font-size: 2.2rem; font-family: 'Bebas Neue', sans-serif; font-weight: bold; }
+        .time-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;}
+
+        /* Selectors */
+        .options-container { margin-bottom: 30px; }
+        .option-group { margin-bottom: 25px; }
+        .option-label { display: flex; justify-content: space-between; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; }
+        
+        .color-options { display: flex; gap: 15px; }
+        .color-circle {
+            width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-light);
+            cursor: pointer; transition: var(--transition-fast); position: relative;
+        }
+        .color-circle.active { border-color: var(--text-main); transform: scale(1.1); }
+        .color-circle.active::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); color: white; font-size: 0.8rem; mix-blend-mode: difference; }
+        
+        .size-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .size-box {
+            border: 1px solid var(--border-light); background: transparent; color: var(--text-main);
+            padding: 15px 0; text-align: center; font-family: 'Inter', sans-serif; font-weight: 600;
+            cursor: pointer; border-radius: 6px; transition: var(--transition-fast);
+        }
+        .size-box:hover { border-color: var(--text-muted); }
+        .size-box.active { background: var(--text-main); color: var(--bg-dark); border-color: var(--text-main); }
+
+        .price-row { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .price-current { font-size: 2.5rem; font-weight: 900; }
+        .price-old { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
+
+        .add-to-cart-btn {
+            background: var(--text-main); color: var(--bg-dark); border: none;
+            width: 100%; padding: 25px; font-size: 1.2rem; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 3px; cursor: pointer;
+            border-radius: 8px; transition: var(--transition-smooth);
+            position: relative; overflow: hidden;
+        }
+        .add-to-cart-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-20deg); transition: 0.5s;
+        }
+        .add-to-cart-btn:hover { background: var(--accent); color: white; box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-5px); }
+        .add-to-cart-btn:hover::before { left: 150%; }
+
+        .shipping-info { display: flex; align-items: center; gap: 10px; margin-top: 15px; color: var(--text-muted); font-size: 0.85rem; justify-content: center; }
+        .shipping-info i { color: var(--accent); }
+
+        /* =========================================
+           MARQUEE BANNER
+           ========================================= */
+        .marquee-wrapper {
+            width: 100%; background: var(--accent); color: white;
+            padding: 15px 0; overflow: hidden; white-space: nowrap;
+            border-top: 1px solid rgba(255,255,255,0.2); border-bottom: 1px solid rgba(255,255,255,0.2);
+            transform: rotate(-1deg) scale(1.05); margin: 50px 0; box-shadow: 0 0 30px var(--accent-glow);
+        }
+        .marquee-content {
+            display: inline-block; font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem; letter-spacing: 3px;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* =========================================
+           LORE / DETAILS SECTION
+           ========================================= */
+        .lore-section {
+            padding: 100px 5%; max-width: 1200px; margin: 0 auto;
+            text-align: center;
+        }
+        .lore-title { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; margin-bottom: 30px; }
+        .lore-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 60px;
+        }
+        .lore-card {
+            background: var(--bg-panel); border: 1px solid var(--border-light);
+            padding: 40px; border-radius: 15px; transition: var(--transition-smooth);
+            position: relative; overflow: hidden;
+        }
+        .lore-card:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.2); box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        .lore-card i { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
+        .lore-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; margin-bottom: 15px; letter-spacing: 1px;}
+        .lore-card p { color: var(--text-muted); line-height: 1.6; }
+
+        /* =========================================
+           BRAND FOOTER
+           ========================================= */
+        footer {
+            background: #000; border-top: 1px solid var(--border-light);
+            padding: 80px 5% 30px; margin-top: 100px;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; max-width: 1400px; margin: 0 auto 50px;
+        }
+        .footer-brand h1 { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 5px; margin-bottom: 20px; }
+        .footer-brand p { color: var(--text-muted); line-height: 1.6; max-width: 400px; margin-bottom: 30px; }
+        .social-links { display: flex; gap: 20px; }
+        .social-links a {
+            width: 45px; height: 45px; border-radius: 50%; background: var(--bg-panel);
+            color: white; display: flex; justify-content: center; align-items: center;
+            text-decoration: none; border: 1px solid var(--border-light); transition: var(--transition-fast);
+        }
+        .social-links a:hover { background: var(--text-main); color: var(--bg-dark); transform: scale(1.1); }
+        
+        .footer-links h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 20px; letter-spacing: 2px; color: var(--text-muted);}
+        .footer-links ul { list-style: none; }
+        .footer-links ul li { margin-bottom: 12px; }
+        .footer-links ul li a { color: #aaa; text-decoration: none; transition: var(--transition-fast); }
+        .footer-links ul li a:hover { color: var(--accent); padding-left: 5px; }
+        
+        .footer-bottom {
+            text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted); font-size: 0.8rem; font-family: monospace; text-transform: uppercase;
+        }
+
+        /* =========================================
+           CART DRAWER & OVERLAYS
+           ========================================= */
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 2000; visibility: hidden; opacity: 0; transition: var(--transition-smooth); }
+        .overlay.active { visibility: visible; opacity: 1; }
+        
+        .cart-drawer { 
+            position: fixed; top:0; right:-500px; width:100%; max-width: 450px; height: 100vh; 
+            background: var(--bg-light); z-index: 2001; transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            padding: 30px; display: flex; flex-direction: column; 
+            border-left: 1px solid var(--border-light); box-shadow: -20px 0 50px rgba(0,0,0,0.9);
+        }
+        .cart-drawer.active { right: 0; }
+        
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 20px; margin-bottom: 25px; }
+        .cart-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; }
+        .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: var(--transition-fast); }
+        .close-btn:hover { color: var(--accent); transform: rotate(90deg); }
+        
+        .cart-items { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 10px; }
+        .cart-item {
+            display: flex; gap: 15px; background: var(--bg-panel); padding: 15px;
+            border-radius: 10px; border: 1px solid rgba(255,255,255,0.02);
+            animation: slideInRight 0.3s forwards;
+        }
+        @keyframes slideInRight { from { opacity:0; transform: translateX(50px); } to { opacity:1; transform: translateX(0); } }
+        
+        .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; }
+        .cart-item-info { flex-grow: 1; }
+        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 5px; }
+        .cart-item-variant { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 5px;}
+        
+        .qty-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .qty-controls button { background: transparent; border: 1px solid var(--text-muted); color: white; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; transition: var(--transition-fast);}
+        .qty-controls button:hover { border-color: white; background: rgba(255,255,255,0.1); }
+        .remove-item { color: var(--accent) !important; font-size: 0.8rem; border: none !important; margin-left: auto; text-transform: uppercase; letter-spacing: 1px; }
+        .remove-item:hover { text-decoration: underline; background: transparent !important; }
+        
+        .cart-footer { border-top: 1px solid var(--border-light); padding-top: 25px; margin-top: 20px; }
+        .cart-total-row { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.5rem; margin-bottom: 20px; }
+
+        /* =========================================
+           CHECKOUT MODAL (FIXED FOR 400 ERROR)
+           ========================================= */
+        .modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
+            width: 90%; max-width: 550px; background: var(--bg-panel); border: 1px solid var(--border-light);
+            border-radius: 15px; padding: 40px; z-index: 2002;
+            visibility: hidden; opacity: 0; transition: var(--transition-smooth);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9); max-height: 90vh; overflow-y: auto;
+        }
+        .modal.active { visibility: visible; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 10px; text-align: center; letter-spacing: 2px;}
+        .modal p.sub { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;}
+        
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .form-group { flex: 1; margin-bottom: 15px; }
+        .form-group input, .form-group textarea { 
+            width: 100%; padding: 15px; background: #050505; border: 1px solid var(--border-light);
+            color: white; border-radius: 6px; font-family: 'Inter', sans-serif; outline: none;
+            transition: var(--transition-fast);
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+        .form-group textarea { resize: none; }
+        
+        .form-status { margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; padding: 10px; border-radius: 6px; display: none;}
+        .form-status.ok { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid #00ff88; display: block;}
+        .form-status.err { background: rgba(230,0,0,0.1); color: var(--accent); border: 1px solid var(--accent); display: block;}
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-split { flex-direction: column; padding-top: 100px; gap: 30px; }
+            .main-image-wrapper { height: 50vh; }
+            .product-title { font-size: 3.5rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .social-links { justify-content: center; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="preloader">
+    <div class="loader-logo">THRIVER</div>
+</div>
+
+<nav id="navbar">
+    <a href="#" class="logo">THRIVER</a>
+    <div class="nav-controls">
+        <a href="#" class="cart-toggle" id="cartToggle">
+            <i class="fas fa-shopping-bag"></i>
+            <span id="cartCount">0</span>
+        </a>
+    </div>
+</nav>
+
+<section class="hero-split">
+    
+    <div class="gallery-container">
+        <div class="main-image-wrapper">
+            <button class="gallery-nav-btn prev-btn" id="galPrev"><i class="fas fa-chevron-left"></i></button>
+            <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop" id="mainGalleryImage" alt="Thriver Hoodie">
+            <button class="gallery-nav-btn next-btn" id="galNext"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="thumbnail-strip" id="thumbnailStrip">
+            </div>
+    </div>
+
+    <div class="product-info">
+        <div class="badge"><i class="fas fa-bolt"></i> LIMITED PRE-ORDER</div>
+        <h1 class="product-title">THE SIGNATURE HOODIE</h1>
+        <p class="product-desc">Ostani fokusiran, radi u tišini, pusti da rezultati govore. Premium mješavina pamuka dizajnirana za svakodnevni hustle. Nema nazad.</p>
+
+        <div class="timer-box">
+            <div class="time-col"><span class="time-val" id="days">00</span><span class="time-lbl">Days</span></div>
+            <div class="time-col"><span class="time-val">:</span></div>
+            <div class="time-col"><span class="time-val" id="hours">00</span><span class="time-lbl">Hours</span></div>
+            <div class="time-col"><span class="time-val">:</span></div>
+            <div class="time-col"><span class="time-val" id="minutes">00</span><span class="time-lbl">Mins</span></div>
+            <div class="time-col"><span class="time-val">:</span></div>
+            <div class="time-col"><span class="time-val" id="seconds">00</span><span class="time-lbl">Secs</span></div>
+        </div>
+
+        <div class="options-container">
+            <div class="option-group">
+                <div class="option-label"><span>Boja</span> <span id="colorNameLabel" style="color: white; font-weight:bold;">Phantom Black</span></div>
+                <div class="color-options">
+                    <div class="color-circle active" data-color="black" data-name="Phantom Black" style="background: #111;"></div>
+                    <div class="color-circle" data-color="grey" data-name="Cement Grey" style="background: #555;"></div>
+                    <div class="color-circle" data-color="bone" data-name="Vintage Bone" style="background: #e3e0d8;"></div>
+                    <div class="color-circle" data-color="pink" data-name="Oriental Pink" style="background: #C69191;"></div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-label"><span>Veličina</span> <span style="cursor:pointer; text-decoration:underline;">Size Guide</span></div>
+                <div class="size-options">
+                    <div class="size-box">S</div>
+                    <div class="size-box active">M</div>
+                    <div class="size-box">L</div>
+                    <div class="size-box">XL</div>
+                    <div class="size-box">XXL</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="price-row">
+            <span class="price-current">49.99 €</span>
+            <span class="price-old">79.99 €</span>
+        </div>
+
+        <button class="add-to-cart-btn" id="addToCartBtn">PREDNARUČI ODMAH</button>
+        <div class="shipping-info"><i class="fas fa-box-open"></i> Šije se po narudžbi. Isporuka u roku od 10-15 dana.</div>
+    </div>
+</section>
+
+<div class="marquee-wrapper">
+    <div class="marquee-content">
+        THRIVE IN SILENCE ✦ LET SUCCESS BE YOUR NOISE ✦ WELCOME TO THE MOVEMENT ✦ NO EXCUSES ✦ 
+        THRIVE IN SILENCE ✦ LET SUCCESS BE YOUR NOISE ✦ WELCOME TO THE MOVEMENT ✦ NO EXCUSES ✦
+    </div>
+</div>
+
+<section class="lore-section">
+    <h2 class="lore-title">THE THRIVER ETHOS</h2>
+    <div class="lore-grid">
+        <div class="lore-card">
+            <i class="fas fa-gem"></i>
+            <h3>UNCOMPROMISING QUALITY</h3>
+            <p>Koristimo samo najkvalitetnije materijale. 80% teški pamuk, 20% premium poliester. Svaki duks je kreiran da izdrži najintenzivnije treninge i svakodnevni grind.</p>
+        </div>
+        <div class="lore-card">
+            <i class="fas fa-eye-slash"></i>
+            <h3>HIDDEN DETAILS</h3>
+            <p>Minimalistički logo naprijed, snažna poruka na leđima. Metalni zatvarači sa gravurom i skrivena poruka unutar svakog komada koja te podsjeća zašto si počeo.</p>
+        </div>
+        <div class="lore-card">
+            <i class="fas fa-globe"></i>
+            <h3>THE MOVEMENT</h3>
+            <p>Thriver nije samo komad odjeće. To je mentalitet. Nismo ovdje da pričamo, ovdje smo da radimo. Kad obučeš Thriver, postaješ dio elitnog kruga.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h1>THRIVER</h1>
+            <p>Osnovano u tišini. Izgrađeno kroz rad. Thriver je premium streetwear brend posvećen onima koji teže savršenstvu bez potrebe za aplauzom. Est. 2025.</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/thriver.wear/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@thriver.wear"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+        <div class="footer-links">
+            <h4>SHOP</h4>
+            <ul>
+                <li><a href="#">The Signature Drop</a></li>
+                <li><a href="#">Veličine i Fit</a></li>
+                <li><a href="#">Praćenje Narudžbe</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>PODRŠKA</h4>
+            <ul>
+                <li><a href="#">Kontaktiraj Nas</a></li>
+                <li><a href="#">Dostava i Povrat</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 THRIVER CLOTHING. ALL RIGHTS RESERVED. <br> "STAY THRIVER."
+    </div>
+</footer>
+
+<div class="overlay" id="mainOverlay"></div>
+
+<aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+        <h3>TVOJA KORPA</h3>
+        <button class="close-btn" id="closeCart"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems">
+        </div>
+    <div class="cart-footer">
+        <div class="cart-total-row">
+            <span>UKUPNO</span>
+            <span id="cartTotal">0.00 €</span>
+        </div>
+        <button class="add-to-cart-btn" id="checkoutBtn" style="padding: 20px; font-size: 1rem;">NASTAVI NA PLAĆANJE</button>
+    </div>
+</aside>
+
+<div class="modal" id="checkoutModal">
+    <h2>ZAVRŠI KUPUJU</h2>
+    <p class="sub">Sigurna naplata. Plaćaš prilikom preuzimanja (Pouzećem).</p>
+    <form id="checkoutForm">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Ime i Prezime" required>
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;"><input type="tel" name="phone" placeholder="Broj Telefona" required></div>
+            <div class="form-group" style="margin-bottom:0;"><input type="email" name="email" placeholder="Email Adresa" required></div>
+        </div>
+        <div class="form-group">
+            <input type="text" name="address" placeholder="Adresa Stanovanja (Ulica i broj)" required>
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;"><input type="text" name="city" placeholder="Grad" required></div>
+            <div class="form-group" style="margin-bottom:0;"><input type="text" name="zip" placeholder="Poštanski Broj" required></div>
+        </div>
+        <div class="form-group">
+            <textarea name="note" placeholder="Napomena za kurira (Opcionalno)" rows="2"></textarea>
+        </div>
+        <button type="submit" class="add-to-cart-btn" style="padding: 15px; font-size: 1rem;">POTVRDI NARUDŽBU</button>
+        <p id="formStatus" class="form-status"></p>
+    </form>
+</div>
+
+<script>
+    // --- 1. ASCII CONSOLE WARNING ---
+    const asciiStop = `
+      _______      _________      _____      ______     _
+     / _____ \\    |____ ____|    / ___ \\     | ____ \\   | |
+    / /     \\_\\       | |       / /   \\ \\    | |   \\ \\  | |
+    | |               | |      / /     \\ \\   | |   | |  | |
+    \\ \\______         | |      | |     | |   | |___/ /  | |
+     \\______ \\        | |      | |     | |   |  ____/   | |
+            \\ \\       | |      | |     | |   | |        | |
+     _      | |       | |      \\ \\     / /   | |        |_|
+    \\ \\_____/ /       | |       \\ \\___/ /    | |         _
+     \\_______/        |_|        \\_____/     |_|        |_|
+
+     Keep your account safe! Do not send any information from
+     here to anyone or paste any text here.
+
+     If someone is asking you to copy or paste text here then
+     you're giving someone access to your account and data.
+    `;
+    console.log(`%c${asciiStop}`, "color: #e60000; font-weight: bold; font-family: monospace; font-size: 12px;");
+
+    // --- 2. PRELOADER & NAV SCROLL ---
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('preloader');
+        preloader.style.opacity = '0';
+        setTimeout(() => preloader.style.visibility = 'hidden', 1000);
+    });
+
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        if(window.scrollY > 50) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+    });
+
+    // --- 3. THE 32-DAY TIMER (From Jul 3, 2026, 10:28 PM -> Aug 4, 2026) ---
+    const targetDate = new Date('2026-08-04T22:28:00').getTime();
+    
+    const timerInterval = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+            clearInterval(timerInterval);
+            document.querySelector('.timer-box').innerHTML = "<h3 style='color:var(--accent); text-align:center; width:100%;'>PRE-ORDER CLOSED</h3>";
+            return;
+        }
+
+        document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+        document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+    }, 1000);
+
+    // --- 4. SICK IMAGE GALLERY LOGIC ---
+    // Mock slike grupisane po bojama
+    const GALLERY_DATA = {
+        black: [
+            "assets/blackfront.png",
+            "assets/blackback.png",
+            "assets/blackpreview.png"
+        ],
+        grey: [
+            "assets/grayfront.png",
+            "assets/grayback.png",
+            "assets/graypreview.png"
+        ],
+        bone: [
+            "assets/whitefront.png",
+            "assets/whiteback.png",
+            "assets/whitepreview.png"
+        ],
+        pink: [
+            "assets/pinkfront.png",
+            "assets/pinkback.png",
+            "assets/pinkpreview.png"
+        ]
+    };
+
+    let currentColor = 'black';
+    let currentImageIndex = 0;
+    const mainImg = document.getElementById('mainGalleryImage');
+    const thumbStrip = document.getElementById('thumbnailStrip');
+
+    function renderGallery() {
+        const images = GALLERY_DATA[currentColor];
+        // Fade efekt za glatku tranziciju
+        mainImg.style.opacity = 0;
+        setTimeout(() => {
+            mainImg.src = images[currentImageIndex];
+            mainImg.style.opacity = 1;
+        }, 200);
+
+        // Render thumbnails
+        thumbStrip.innerHTML = images.map((src, index) => `
+            <img src="${src}" class="thumb-img ${index === currentImageIndex ? 'active' : ''}" 
+                 onclick="setGalleryIndex(${index})" alt="Thumb ${index}">
+        `).join('');
+    }
+
+    function setGalleryIndex(index) {
+        currentImageIndex = index;
+        renderGallery();
+    }
+
+    document.getElementById('galPrev').addEventListener('click', () => {
+        const images = GALLERY_DATA[currentColor];
+        currentImageIndex = (currentImageIndex === 0) ? images.length - 1 : currentImageIndex - 1;
+        renderGallery();
+    });
+
+    document.getElementById('galNext').addEventListener('click', () => {
+        const images = GALLERY_DATA[currentColor];
+        currentImageIndex = (currentImageIndex === images.length - 1) ? 0 : currentImageIndex + 1;
+        renderGallery();
+    });
+
+    // Inicijalni render
+    renderGallery();
+
+    // --- 5. UI SELEKCIJE (Color & Size) ---
+    document.querySelectorAll('.color-circle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.color-circle').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update labele boje i galerije
+            document.getElementById('colorNameLabel').innerText = this.getAttribute('data-name');
+            currentColor = this.getAttribute('data-color');
+            currentImageIndex = 0; // Reset index kad promijeni boju
+            renderGallery();
+        });
+    });
+
+    document.querySelectorAll('.size-box').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.size-box').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // --- 6. CART & CHECKOUT LOGIC (MAPPED TO SERVER.JS) ---
+    const ORDER_ENDPOINT = '/api/order';
+    let cart = JSON.parse(localStorage.getItem('thriver_cart_v2') || '[]');
+
+    function saveCart() { 
+        localStorage.setItem('thriver_cart_v2', JSON.stringify(cart)); 
+        renderCartUI(); 
+    }
+
+    function addToCart() {
+        const size = document.querySelector('.size-box.active').innerText;
+        const colorName = document.querySelector('.color-circle.active').getAttribute('data-name');
+        
+        // Kreiramo string koji server.js lako prepoznaje u Discordu (npr. "Signature Hoodie - Phantom Black, M")
+        const itemName = `Signature Hoodie - ${colorName}, Size: ${size}`;
+        const itemId = `sig-hoodie-${currentColor}-${size}`;
+        const price = 49.99;
+        const img = GALLERY_DATA[currentColor][0]; // Slika za korpu
+
+        const existing = cart.find(i => i.id === itemId);
+        if(existing) {
+            existing.qty += 1;
+        } else {
+            // Ubacujemo 'name' i 'price' jer tvoj server.js to traži!
+            cart.push({ id: itemId, name: itemName, img: img, price: price, qty: 1 });
+        }
+        
+        saveCart();
+        openCartDrawer();
+    }
+
+    document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+
+    function changeQty(id, delta) {
+        const item = cart.find(i => i.id === id);
+        if(!item) return;
+        item.qty += delta;
+        if(item.qty <= 0) cart = cart.filter(i => i.id !== id);
+        saveCart();
+    }
+
+    function renderCartUI() {
+        const wrap = document.getElementById('cartItems');
+        let total = 0;
+        let count = 0;
+
+        if (cart.length === 0) {
+            wrap.innerHTML = '<p style="text-align:center; color:#666; margin-top:50px;">Korpa je prazna.</p>';
+        } else {
+            wrap.innerHTML = cart.map(i => {
+                total += (i.price * i.qty);
+                count += i.qty;
+                return `
+                <div class="cart-item">
+                    <img src="${i.img}" alt="Product">
+                    <div class="cart-item-info">
+                        <h4>${i.name.split(',')[0]}</h4>
+                        <span class="cart-item-variant">${i.name.split(',')[1]}</span>
+                        <p style="color:var(--text-main); font-weight:bold; margin-top:5px;">${i.price.toFixed(2)} €</p>
+                        <div class="qty-controls">
+                            <button onclick="changeQty('${i.id}', -1)">−</button>
+                            <span style="font-size:0.9rem;">${i.qty}</span>
+                            <button onclick="changeQty('${i.id}', 1)">+</button>
+                            <button class="remove-item" onclick="changeQty('${i.id}', -999)">Ukloni</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        document.getElementById('cartCount').innerText = count;
+        document.getElementById('cartTotal').innerText = total.toFixed(2) + ' €';
+    }
+
+    // Modal Control
+    const overlay = document.getElementById('mainOverlay');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const checkoutModal = document.getElementById('checkoutModal');
+
+    function openCartDrawer() { overlay.classList.add('active'); cartDrawer.classList.add('active'); }
+    function closeModals() { overlay.classList.remove('active'); cartDrawer.classList.remove('active'); checkoutModal.classList.remove('active'); }
+
+    document.getElementById('cartToggle').addEventListener('click', (e) => { e.preventDefault(); openCartDrawer(); });
+    document.getElementById('closeCart').addEventListener('click', closeModals);
+    overlay.addEventListener('click', closeModals);
+
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+        if(cart.length === 0) return;
+        cartDrawer.classList.remove('active');
+        checkoutModal.classList.add('active');
+    });
+
+    // --- 7. CHECKOUT SUBMIT TO EXPRESS SERVER ---
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const status = document.getElementById('formStatus');
+        
+        // Prikupljamo formu - OVDJE JE SADA 'phone' POLJE KOJE JE FALILO
+        const formData = new FormData(form);
+        const customer = Object.fromEntries(formData.entries());
+        
+        let totalVal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+        const payload = {
+            customer: customer,
+            items: cart, // items vec ima .name, .price i .qty sto server treba
+            total: totalVal
+        };
+
+        status.textContent = 'Procesiranje narudžbe...';
+        status.className = 'form-status'; // Reset klase
+        status.style.display = 'block';
+
+        try {
+            const res = await fetch(ORDER_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Greška na serveru');
+            }
+
+            status.textContent = 'NARUDŽBA USPJEŠNA! Očekujte poziv kurira.';
+            status.className = 'form-status ok';
+            
+            // Isprazni korpu i formu
+            cart = [];
+            saveCart();
+            form.reset();
+            
+            // Zatvori modal nakon 3 sekunde
+            setTimeout(closeModals, 3000);
+
+        } catch(err) {
+            console.error("Fetch Error:", err);
+            status.textContent = 'Došlo je do greške. Provjerite podatke i pokušajte ponovo.';
+            status.className = 'form-status err';
+        }
+    });
+
+    // Inicijalno ucitavanje korpe
+    renderCartUI();
+
+</script>
+</body>
+</html>
