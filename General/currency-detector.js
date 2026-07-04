@@ -180,6 +180,10 @@ let currentCurrencySymbol = '€';
 const BASE_PRICE_EUR = 49.99;
 const PREMIUM_SURCHARGE_EUR = 5.00;
 
+// Export to window for other modules
+window.currentCurrency = currentCurrency;
+window.currentCurrencySymbol = currentCurrencySymbol;
+
 // Function to convert price from EUR to target currency
 function convertPrice(priceInEUR, targetCurrency) {
     const rate = EXCHANGE_RATES[targetCurrency] || 1.0;
@@ -198,6 +202,10 @@ function updatePrices(currency) {
     const symbol = CURRENCY_SYMBOLS[currency] || currency;
     currentCurrency = currency;
     currentCurrencySymbol = symbol;
+    
+    // Update window exports for other modules
+    window.currentCurrency = currentCurrency;
+    window.currentCurrencySymbol = currentCurrencySymbol;
 
     // Convert base price and premium surcharge
     const convertedBasePrice = convertPrice(BASE_PRICE_EUR, currency);

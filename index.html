@@ -1163,6 +1163,9 @@
         const cartEmptyText = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang] 
             ? TRANSLATIONS[currentLang].cartEmpty 
             : (currentLang === 'en' ? 'Your cart is empty.' : currentLang === 'de' ? 'Ihr Warenkorb ist leer.' : 'Korpa je prazna.');
+        
+        // Get current currency symbol
+        const currencySymbol = typeof currentCurrencySymbol !== 'undefined' ? currentCurrencySymbol : '€';
 
         if (cart.length === 0) {
             wrap.innerHTML = `<div class="cart-empty"><i class="fas fa-bag-shopping"></i><span>${cartEmptyText}</span></div>`;
@@ -1176,7 +1179,7 @@
                     <div class="cart-item-info">
                         <h4>${i.name.split(',')[0]}</h4>
                         <span class="cart-item-variant">${i.name.split(',')[1]}</span>
-                        <p style="color:var(--ink); font-weight:bold; margin-top:4px;">${i.price.toFixed(2)} €</p>
+                        <p style="color:var(--ink); font-weight:bold; margin-top:4px;">${i.price.toFixed(2)} ${currencySymbol}</p>
                         <div class="qty-controls">
                             <button onclick="changeQty('${i.id}', -1)">−</button>
                             <span style="font-size:0.9rem; width:16px; text-align:center;">${i.qty}</span>
@@ -1189,7 +1192,7 @@
         }
 
         document.getElementById('cartCount').innerText = count;
-        document.getElementById('cartTotal').innerText = total.toFixed(2) + ' €';
+        document.getElementById('cartTotal').innerText = total.toFixed(2) + ' ' + currencySymbol;
     }
 
     // Modal control
@@ -1233,9 +1236,12 @@
             else if (currentLang === 'de') orderTotalText = 'Gesamt zu zahlen (Karte)';
         }
         
+        // Get current currency symbol
+        const currencySymbol = typeof currentCurrencySymbol !== 'undefined' ? currentCurrencySymbol : '€';
+        
         wrap.innerHTML = cart.map(i => `
-            <div class="order-summary-row"><span>${i.name} × ${i.qty}</span><span>${(i.price * i.qty).toFixed(2)} €</span></div>
-        `).join('') + `<div class="order-summary-total"><span>${orderTotalText}</span><span>${total.toFixed(2)} €</span></div>`;
+            <div class="order-summary-row"><span>${i.name} × ${i.qty}</span><span>${(i.price * i.qty).toFixed(2)} ${currencySymbol}</span></div>
+        `).join('') + `<div class="order-summary-total"><span>${orderTotalText}</span><span>${total.toFixed(2)} ${currencySymbol}</span></div>`;
     }
 
     // --- CHECKOUT SUBMIT (WITH TOS CHECK) ---
