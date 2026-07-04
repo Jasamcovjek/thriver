@@ -589,6 +589,14 @@ function applyLanguage(lang) {
         orderSummaryTotal.textContent = t.orderSummaryTotal;
     }
 
+    // Re-render order summary if cart has items to ensure translation is applied
+    if (typeof renderOrderSummary === 'function') {
+        const cart = JSON.parse(localStorage.getItem('thriver_cart_v3') || '[]');
+        if (cart.length > 0) {
+            renderOrderSummary();
+        }
+    }
+
     // Update checkout button in cart drawer
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) {
