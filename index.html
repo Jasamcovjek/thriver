@@ -1220,9 +1220,16 @@
     function renderOrderSummary() {
         const wrap = document.getElementById('orderSummary');
         const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+        
+        // Get current language translation for order summary total
+        const currentLang = document.documentElement.lang || 'bs';
+        const orderTotalText = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang] 
+            ? TRANSLATIONS[currentLang].orderSummaryTotal 
+            : (currentLang === 'en' ? 'Total to pay (Card)' : currentLang === 'de' ? 'Gesamt zu zahlen (Karte)' : 'Ukupno za platiti (Kartica)');
+        
         wrap.innerHTML = cart.map(i => `
             <div class="order-summary-row"><span>${i.name} × ${i.qty}</span><span>${(i.price * i.qty).toFixed(2)} €</span></div>
-        `).join('') + `<div class="order-summary-total"><span>Ukupno za platiti (Kartica)</span><span>${total.toFixed(2)} €</span></div>`;
+        `).join('') + `<div class="order-summary-total"><span>${orderTotalText}</span><span>${total.toFixed(2)} €</span></div>`;
     }
 
     // --- CHECKOUT SUBMIT (WITH TOS CHECK) ---
