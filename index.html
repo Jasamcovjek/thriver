@@ -3,482 +3,848 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THRIVER | Premium Brand</title>
-    
+    <title>THRIVER | Signature Hoodie</title>
+
     <link rel="icon" href="assets/logo.png" type="image/x-icon">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         /* =========================================
-           CORE VARIABLES & RESET
+           TOKENS
            ========================================= */
         :root {
-            --bg-dark: #020202;
-            --bg-panel: #0a0a0a;
-            --bg-lighter: #111111;
-            --text-main: #f5f5f5;
-            --text-muted: #777777;
-            --text-dark: #333333;
-            --accent: #e60000;
-            --accent-glow: rgba(230, 0, 0, 0.4);
-            --border-light: rgba(255, 255, 255, 0.08);
-            --transition-fast: 0.3s ease;
-            --transition-smooth: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            --void: #050505;
+            --panel: #0d0d0c;
+            --elevated: #151513;
+            --ink: #f2efe8;
+            --ink-dim: #93908a;
+            --ink-faint: #514f4a;
+            --blood: #d21f1f;
+            --blood-dim: #7a1010;
+            --blood-glow: rgba(210, 31, 31, 0.45);
+            --line: rgba(255, 255, 255, 0.08);
+            --stitch: rgba(255, 255, 255, 0.22);
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--void);
+            color: var(--ink);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 70%);
+            background-image: radial-gradient(circle at 50% 0%, #161513 0%, transparent 65%);
         }
 
-        /* Skrivanje scrollbara za sick clean look */
+        a { color: inherit; }
+        img { max-width: 100%; display: block; }
+
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-main); }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ink-dim); }
+
+        :focus-visible { outline: 2px solid var(--blood); outline-offset: 3px; }
+
+        .mono {
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .grain {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9997; opacity: 0.035; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        }
+
+        .frame-corners { position: relative; }
+        .frame-corners::before,
+        .frame-corners::after {
+            content: ''; position: absolute; width: 18px; height: 18px; pointer-events: none;
+            border: 2px solid var(--blood);
+            transition: all 0.3s var(--ease);
+        }
+        .frame-corners::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .frame-corners::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        .frame-corners:hover::before, .frame-corners:hover::after { border-color: var(--ink); width: 24px; height: 24px; }
+
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+        .reveal.in-view { opacity: 1; transform: translateY(0); }
 
         /* =========================================
            PRELOADER
            ========================================= */
         #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--bg-dark); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 1s ease-out, visibility 1s ease-out;
+            position: fixed; inset: 0; background: var(--void); z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 14px;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
         }
         .loader-logo {
-            font-family: 'Bebas Neue', sans-serif; font-size: 5rem; letter-spacing: 10px;
-            color: var(--text-main); animation: pulseLoader 1.5s infinite alternate;
+            font-family: 'Bebas Neue', sans-serif; font-size: 4.5rem; letter-spacing: 10px;
+            color: var(--ink); animation: pulseLoader 1.4s infinite alternate;
         }
+        .loader-tag { font-size: 0.7rem; color: var(--ink-faint); letter-spacing: 4px; }
         @keyframes pulseLoader {
-            0% { opacity: 0.3; transform: scale(0.95) blur(2px); text-shadow: 0 0 0 var(--accent); }
-            100% { opacity: 1; transform: scale(1) blur(0); text-shadow: 0 0 30px var(--accent-glow); }
+            0% { opacity: 0.25; text-shadow: 0 0 0 var(--blood); }
+            100% { opacity: 1; text-shadow: 0 0 35px var(--blood-glow); }
         }
 
         /* =========================================
            NAVIGATION
            ========================================= */
         nav {
-            position: fixed; top: 0; width: 100%;
+            position: fixed; top: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 25px 5%; z-index: 1000;
-            background: rgba(2, 2, 2, 0.8);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-light);
-            transition: var(--transition-smooth);
+            padding: 24px 5%;
+            background: rgba(5, 5, 5, 0.75);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--line);
+            transition: padding 0.4s var(--ease), background 0.4s var(--ease);
         }
-        nav.scrolled { padding: 15px 5%; background: rgba(2, 2, 2, 0.95); }
+        nav.scrolled { padding: 14px 5%; background: rgba(5, 5, 5, 0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
 
-        .logo {
-            font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 4px;
-            color: var(--text-main); text-transform: uppercase; text-decoration: none;
-            position: relative;
-        }
-        .logo::after {
-            content: '®'; position: absolute; top: 5px; right: -15px; font-size: 0.8rem; color: var(--accent);
-        }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.3rem; letter-spacing: 4px; text-decoration: none; position: relative; }
+        .logo::after { content: '\00ae'; position: absolute; top: 3px; right: -14px; font-size: 0.7rem; color: var(--blood); text-shadow: 0 0 8px var(--blood-glow); }
 
-        .nav-controls { display: flex; gap: 30px; align-items: center; }
-        
-        .cart-toggle {
-            color: var(--text-main); text-decoration: none; font-size: 1.5rem;
-            position: relative; transition: var(--transition-fast);
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--ink-dim); position: relative; padding-bottom: 4px; transition: color 0.3s;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--blood);
+            transition: width 0.3s var(--ease);
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a:hover::after { width: 100%; box-shadow: 0 0 8px var(--blood-glow); }
+
+        .nav-controls { display: flex; gap: 18px; align-items: center; }
+
+        .icon-btn {
+            text-decoration: none; font-size: 1.2rem; position: relative;
             display: flex; align-items: center; justify-content: center;
-            width: 45px; height: 45px; border-radius: 50%; background: var(--bg-panel);
-            border: 1px solid var(--border-light);
+            width: 42px; height: 42px; border-radius: 50%; background: var(--panel);
+            border: 1px solid var(--line); cursor: pointer; color: var(--ink); transition: all 0.3s;
         }
-        .cart-toggle:hover { color: var(--accent); border-color: var(--accent); transform: scale(1.05); box-shadow: 0 0 20px var(--accent-glow); }
-        
+        .icon-btn:hover { color: var(--blood); border-color: var(--blood); box-shadow: 0 0 20px var(--blood-glow); transform: translateY(-2px); }
+
         #cartCount {
-            position: absolute; top: -5px; right: -5px;
-            background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 800;
-            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; box-shadow: 0 0 10px var(--accent-glow);
+            position: absolute; top: -4px; right: -4px; background: var(--blood); color: #fff;
+            font-size: 0.65rem; font-weight: 800; width: 18px; height: 18px; display: flex;
+            align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 0 10px var(--blood-glow);
         }
+
+        .hamburger { display: none; }
+
+        .mobile-nav {
+            position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 3500;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+            visibility: hidden; opacity: 0; transition: 0.4s var(--ease);
+        }
+        .mobile-nav.active { visibility: visible; opacity: 1; }
+        .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 3px; text-decoration: none; color: var(--ink-dim); transition: 0.3s; }
+        .mobile-nav a:hover { color: var(--ink); text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .mobile-nav-close { position: absolute; top: 30px; right: 30px; font-size: 1.8rem; background: none; border: none; color: var(--ink); cursor: pointer; }
+        .mobile-nav-close:hover { color: var(--blood); }
 
         /* =========================================
-           HERO SPLIT SECTION (CAROUSEL + CONFIG)
+           HERO SPLIT
            ========================================= */
         .hero-split {
-            min-height: 100vh; display: flex; padding: 120px 5% 50px;
-            max-width: 1600px; margin: 0 auto; gap: 50px; align-items: center;
+            min-height: 100vh; display: flex; padding: 130px 5% 60px;
+            max-width: 1600px; margin: 0 auto; gap: 60px; align-items: flex-start;
         }
 
-        /* Left: Carousel */
-        .gallery-container {
-            flex: 1; position: relative; display: flex; flex-direction: column; gap: 20px;
-        }
+        .gallery-container { flex: 1.1; position: relative; display: flex; flex-direction: column; gap: 18px; position: sticky; top: 110px; }
+
         .main-image-wrapper {
-            width: 100%; height: 65vh; background: var(--bg-panel); border-radius: 20px;
-            border: 1px solid var(--border-light); overflow: hidden;
-            display: flex; justify-content: center; align-items: center; position: relative;
+            width: 100%; height: 65vh; background: var(--panel); border-radius: 4px;
+            border: 1px solid var(--line); overflow: hidden; position: relative;
+            display: flex; justify-content: center; align-items: center; cursor: zoom-in;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
         }
         .main-image-wrapper::before {
-            content: "THRIVER"; position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); font-family: 'Bebas Neue', sans-serif;
-            font-size: 15vw; color: rgba(255,255,255,0.02); z-index: 0; pointer-events: none;
+            content: "THRIVER"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Bebas Neue', sans-serif; font-size: 15vw; color: rgba(255,255,255,0.015);
+            z-index: 0; pointer-events: none; white-space: nowrap;
         }
         #mainGalleryImage {
-            max-width: 90%; max-height: 90%; object-fit: contain; z-index: 1;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            max-width: 100%; max-height: 100%; object-fit: contain; z-index: 1;
+            transition: opacity 0.35s ease, transform 0.6s var(--ease);
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
         }
+        .main-image-wrapper:hover #mainGalleryImage { transform: scale(1.05); }
+
+        .frame-tag {
+            position: absolute; top: 16px; left: 16px; z-index: 2;
+            font-size: 0.65rem; padding: 6px 12px; background: rgba(5,5,5,0.85);
+            border: 1px dashed var(--stitch); color: var(--ink);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .frame-index { position: absolute; bottom: 16px; right: 16px; z-index: 2; font-size: 0.65rem; color: var(--ink-dim); text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
         .gallery-nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--border-light);
-            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
-            z-index: 2; backdrop-filter: blur(5px); transition: var(--transition-fast);
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            background: rgba(5,5,5,0.65); color: white; border: 1px solid var(--line);
+            width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+            z-index: 2; backdrop-filter: blur(8px); transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
         }
-        .gallery-nav-btn:hover { background: var(--accent); border-color: var(--accent); }
-        .prev-btn { left: 20px; } .next-btn { right: 20px; }
+        .gallery-nav-btn:hover { background: var(--blood); border-color: var(--blood); box-shadow: 0 0 15px var(--blood-glow); scale: 1.1; }
+        .prev-btn { left: 18px; } .next-btn { right: 18px; }
 
-        .thumbnail-strip { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .thumbnail-strip { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 6px; }
         .thumb-img {
-            width: 80px; height: 80px; object-fit: cover; border-radius: 10px;
-            background: var(--bg-panel); border: 2px solid transparent;
-            cursor: pointer; transition: var(--transition-fast); opacity: 0.5;
+            width: 74px; height: 74px; object-fit: cover; border-radius: 3px;
+            background: var(--panel); border: 1px solid var(--line); flex-shrink: 0;
+            cursor: pointer; transition: 0.3s; opacity: 0.45; filter: grayscale(100%);
         }
         .thumb-img:hover { opacity: 0.8; }
-        .thumb-img.active { border-color: var(--text-main); opacity: 1; transform: scale(1.05); }
+        .thumb-img.active { border-color: var(--ink); opacity: 1; filter: grayscale(0%); box-shadow: 0 4px 15px rgba(0,0,0,0.5); transform: translateY(-2px); }
 
-        /* Right: Configurator */
-        .product-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        
-        .badge {
-            display: inline-table; background: rgba(230,0,0,0.1); border: 1px solid var(--accent);
-            color: var(--accent); padding: 5px 15px; font-size: 0.8rem; font-weight: 800;
-            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
-            box-shadow: 0 0 15px var(--accent-glow); animation: pulseBadge 2s infinite;
+        /* Right column */
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+
+        .hang-tag {
+            display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+            padding: 8px 16px 8px 12px; margin-bottom: 22px; position: relative;
+            background: rgba(210,31,31,0.08); color: var(--blood); font-size: 0.72rem; font-weight: 700;
+            border-left: 2px solid var(--blood); letter-spacing: 0.5px;
         }
-        @keyframes pulseBadge { 0% { box-shadow: 0 0 0 0 var(--accent-glow); } 70% { box-shadow: 0 0 0 10px rgba(230,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(230,0,0,0); } }
+        .hang-tag i { font-size: 0.7rem; text-shadow: 0 0 8px var(--blood-glow); }
 
         .product-title {
-            font-family: 'Bebas Neue', sans-serif; font-size: 5rem; line-height: 0.9;
-            letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase;
-            background: linear-gradient(to right, #fff, #888);
+            font-family: 'Bebas Neue', sans-serif; font-size: 4.8rem; line-height: 0.9;
+            letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase;
+            background: linear-gradient(180deg, #ffffff 0%, #8a8882 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(255,255,255,0.05);
         }
-        .product-desc { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; max-width: 500px; }
+        .product-sku { color: var(--ink-faint); font-size: 0.68rem; margin-bottom: 20px; display: block; }
+        .product-desc { font-size: 1.05rem; color: var(--ink-dim); margin-bottom: 30px; line-height: 1.65; max-width: 500px; }
 
-        /* Timer in Right Panel */
-        .timer-box {
-            background: var(--bg-panel); border: 1px solid var(--border-light);
-            border-radius: 12px; padding: 20px; display: flex; justify-content: space-around;
-            margin-bottom: 40px; position: relative; overflow: hidden;
+        /* Tabs */
+        .info-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+        .tab-btn {
+            background: none; border: none; color: var(--ink-faint); font-size: 0.72rem; letter-spacing: 1.5px;
+            text-transform: uppercase; padding: 12px 4px; margin-right: 28px; cursor: pointer; position: relative;
+            font-family: 'Space Mono', monospace; transition: color 0.3s;
         }
-        .timer-box::after { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
-        .time-col { display: flex; flex-direction: column; align-items: center; }
-        .time-val { font-size: 2.2rem; font-family: 'Bebas Neue', sans-serif; font-weight: bold; }
-        .time-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;}
+        .tab-btn::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 0; height: 2px; background: var(--blood); transition: width 0.3s var(--ease); box-shadow: 0 -2px 10px var(--blood-glow); }
+        .tab-btn.active { color: var(--ink); font-weight: bold; }
+        .tab-btn.active::after { width: 100%; }
+        .tab-panel { display: none; color: var(--ink-dim); font-size: 0.9rem; line-height: 1.7; margin-bottom: 26px; min-height: 60px; animation: fadeIn 0.4s var(--ease); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-panel.active { display: block; }
+        .tab-panel ul { padding-left: 18px; }
+        .tab-panel li { margin-bottom: 8px; }
+
+        /* Scarcity meter */
+        .scarcity-box { margin-bottom: 30px; background: var(--panel); padding: 14px; border: 1px dashed var(--line); border-radius: 4px; }
+        .scarcity-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-dim); margin-bottom: 10px; font-weight: 500; }
+        .scarcity-label strong { color: var(--blood); font-weight: 800; }
+        .scarcity-track { width: 100%; height: 6px; background: var(--elevated); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+        .scarcity-fill { height: 100%; width: 70%; background: linear-gradient(to right, var(--blood-dim), var(--blood)); box-shadow: 0 0 12px var(--blood-glow); border-radius: 4px; }
 
         /* Selectors */
-        .options-container { margin-bottom: 30px; }
-        .option-group { margin-bottom: 25px; }
-        .option-label { display: flex; justify-content: space-between; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; }
-        
-        .color-options { display: flex; gap: 15px; }
+        .options-container { margin-bottom: 26px; }
+        .option-group { margin-bottom: 28px; }
+        .option-label { display: flex; justify-content: space-between; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-dim); margin-bottom: 14px; font-weight: 600; }
+        .option-label button { background: none; border: none; color: var(--ink-dim); text-decoration: underline; cursor: pointer; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1.5px; font-family: inherit; transition: 0.3s; }
+        .option-label button:hover { color: var(--blood); text-shadow: 0 0 8px var(--blood-glow); }
+
+        .color-options { display: flex; gap: 16px; }
         .color-circle {
-            width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-light);
-            cursor: pointer; transition: var(--transition-fast); position: relative;
+            width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line);
+            cursor: pointer; transition: 0.3s; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .color-circle.active { border-color: var(--text-main); transform: scale(1.1); }
-        .color-circle.active::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); color: white; font-size: 0.8rem; mix-blend-mode: difference; }
-        
+        .color-circle:hover { transform: scale(1.08); border-color: var(--ink-dim); }
+        .color-circle.active { border-color: var(--ink); transform: scale(1.15); box-shadow: 0 0 15px rgba(255,255,255,0.15); }
+        .color-circle.active::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 0.75rem; mix-blend-mode: difference;
+        }
+
         .size-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
         .size-box {
-            border: 1px solid var(--border-light); background: transparent; color: var(--text-main);
-            padding: 15px 0; text-align: center; font-family: 'Inter', sans-serif; font-weight: 600;
-            cursor: pointer; border-radius: 6px; transition: var(--transition-fast);
+            border: 1px solid var(--line); background: transparent; color: var(--ink);
+            padding: 14px 0; text-align: center; font-family: 'Space Mono', monospace; font-weight: 700;
+            cursor: pointer; border-radius: 4px; transition: all 0.3s var(--ease); font-size: 0.9rem;
+            position: relative; overflow: hidden;
         }
-        .size-box:hover { border-color: var(--text-muted); }
-        .size-box.active { background: var(--text-main); color: var(--bg-dark); border-color: var(--text-main); }
+        .size-box:hover { border-color: var(--ink); background: rgba(255,255,255,0.03); }
+        .size-box.active { background: var(--ink); color: var(--void); border-color: var(--ink); box-shadow: 0 0 20px rgba(255,255,255,0.15); }
 
-        .price-row { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .price-current { font-size: 2.5rem; font-weight: 900; }
-        .price-old { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
+        .price-row { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+        .price-current { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.5px; transition: 0.3s; }
+        .price-old { font-size: 1.15rem; color: var(--ink-faint); text-decoration: line-through; }
+        .price-save { font-size: 0.75rem; color: var(--blood); font-family: 'Space Mono', monospace; background: rgba(210,31,31,0.1); padding: 4px 8px; border-radius: 3px; }
 
         .add-to-cart-btn {
-            background: var(--text-main); color: var(--bg-dark); border: none;
-            width: 100%; padding: 25px; font-size: 1.2rem; font-weight: 900;
+            background: var(--ink); color: var(--void); border: none;
+            width: 100%; padding: 22px; font-size: 1.05rem; font-weight: 900;
             text-transform: uppercase; letter-spacing: 3px; cursor: pointer;
-            border-radius: 8px; transition: var(--transition-smooth);
+            border-radius: 4px; transition: transform 0.25s var(--ease), box-shadow 0.25s, background 0.25s, color 0.25s;
             position: relative; overflow: hidden;
         }
         .add-to-cart-btn::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
-            transform: skewX(-20deg); transition: 0.5s;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.7), transparent);
+            transform: skewX(-20deg); transition: 0.6s;
         }
-        .add-to-cart-btn:hover { background: var(--accent); color: white; box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-5px); }
+        .add-to-cart-btn:hover { background: var(--blood); color: white; box-shadow: 0 12px 35px var(--blood-glow); transform: translateY(-3px); }
         .add-to-cart-btn:hover::before { left: 150%; }
+        .add-to-cart-btn:active { transform: translateY(0); }
 
-        .shipping-info { display: flex; align-items: center; gap: 10px; margin-top: 15px; color: var(--text-muted); font-size: 0.85rem; justify-content: center; }
-        .shipping-info i { color: var(--accent); }
+        .trust-strip { display: flex; justify-content: space-between; gap: 10px; margin-top: 22px; background: var(--panel); padding: 16px; border-radius: 6px; border: 1px solid var(--line); }
+        .trust-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: var(--ink-dim); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;}
+        .trust-item i { color: var(--blood); font-size: 1.1rem; text-shadow: 0 0 8px var(--blood-glow); }
+
+        /* Sticky mobile CTA */
+        .sticky-cta {
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1400;
+            background: rgba(10,10,9,0.97); backdrop-filter: blur(14px); border-top: 1px solid var(--line);
+            padding: 14px 5%; align-items: center; justify-content: space-between; gap: 16px;
+            transform: translateY(120%); transition: transform 0.4s var(--ease);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
+        }
+        .sticky-cta.show { transform: translateY(0); }
+        .sticky-cta-info { display: flex; flex-direction: column; }
+        .sticky-cta-name { font-size: 0.72rem; color: var(--ink-dim); }
+        .sticky-cta-price { font-weight: 800; font-size: 1.1rem; transition: 0.3s; }
+        .sticky-cta-btn {
+            background: var(--blood); color: white; border: none; padding: 13px 22px;
+            font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-radius: 4px;
+            cursor: pointer; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 0 15px var(--blood-glow);
+        }
 
         /* =========================================
-           MARQUEE BANNER
+           MARQUEE
            ========================================= */
         .marquee-wrapper {
-            width: 100%; background: var(--accent); color: white;
-            padding: 15px 0; overflow: hidden; white-space: nowrap;
-            border-top: 1px solid rgba(255,255,255,0.2); border-bottom: 1px solid rgba(255,255,255,0.2);
-            transform: rotate(-1deg) scale(1.05); margin: 50px 0; box-shadow: 0 0 30px var(--accent-glow);
+            width: 100%; background: var(--blood); color: white; padding: 16px 0; overflow: hidden;
+            white-space: nowrap; transform: rotate(-1.5deg) scale(1.05); margin: 60px 0;
+            box-shadow: 0 0 30px var(--blood-glow); position: relative; z-index: 10;
         }
-        .marquee-content {
-            display: inline-block; font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem; letter-spacing: 3px;
-            animation: marquee 20s linear infinite;
-        }
+        .marquee-content { display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; animation: marquee 22s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* =========================================
-           LORE / DETAILS SECTION
+           TRUST / SPEC STRIP
            ========================================= */
-        .lore-section {
-            padding: 100px 5%; max-width: 1200px; margin: 0 auto;
-            text-align: center;
-        }
-        .lore-title { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; margin-bottom: 30px; }
-        .lore-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 60px;
-        }
-        .lore-card {
-            background: var(--bg-panel); border: 1px solid var(--border-light);
-            padding: 40px; border-radius: 15px; transition: var(--transition-smooth);
-            position: relative; overflow: hidden;
-        }
-        .lore-card:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.2); box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-        .lore-card i { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
-        .lore-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; margin-bottom: 15px; letter-spacing: 1px;}
-        .lore-card p { color: var(--text-muted); line-height: 1.6; }
+        .spec-strip { max-width: 1200px; margin: 0 auto; padding: 0 5% 70px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .spec-item { text-align: center; padding: 28px 14px; border: 1px dashed var(--line); background: var(--panel); transition: 0.4s; border-radius: 4px; }
+        .spec-item:hover { transform: translateY(-5px); border-color: var(--ink-dim); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .spec-item i { font-size: 1.6rem; color: var(--blood); margin-bottom: 14px; text-shadow: 0 0 10px var(--blood-glow); }
+        .spec-item h5 { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 8px; color: var(--ink); }
+        .spec-item p { color: var(--ink-faint); font-size: 0.8rem; }
 
         /* =========================================
-           BRAND FOOTER
+           ETHOS / LORE
            ========================================= */
-        footer {
-            background: #000; border-top: 1px solid var(--border-light);
-            padding: 80px 5% 30px; margin-top: 100px;
+        .lore-section { padding: 80px 5% 100px; max-width: 1200px; margin: 0 auto; }
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 10px; font-size: 0.72rem; color: var(--ink-dim);
+            margin-bottom: 20px; padding: 6px 0; text-transform: uppercase; letter-spacing: 2px;
         }
-        .footer-grid {
-            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; max-width: 1400px; margin: 0 auto 50px;
+        .section-eyebrow::before { content: ''; width: 30px; height: 2px; background: var(--blood); box-shadow: 0 0 8px var(--blood-glow); }
+        .lore-title { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; margin-bottom: 50px; max-width: 750px; letter-spacing: 1px; line-height: 1.1; }
+        .lore-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .lore-card {
+            background: var(--panel); border: 1px solid var(--line); padding: 40px; border-radius: 6px;
+            transition: 0.5s var(--ease); position: relative; overflow: hidden;
         }
-        .footer-brand h1 { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 5px; margin-bottom: 20px; }
-        .footer-brand p { color: var(--text-muted); line-height: 1.6; max-width: 400px; margin-bottom: 30px; }
-        .social-links { display: flex; gap: 20px; }
+        .lore-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--blood); transition: 0.4s var(--ease);
+        }
+        .lore-card:hover { transform: translateY(-8px); border-color: rgba(255,255,255,0.15); box-shadow: 0 25px 45px rgba(0,0,0,0.7); }
+        .lore-card:hover::before { height: 100%; box-shadow: 0 0 15px var(--blood-glow); }
+        .lore-tag { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--blood); margin-bottom: 18px; display: block; letter-spacing: 1px; }
+        .lore-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; margin-bottom: 14px; letter-spacing: 1.5px; }
+        .lore-card p { color: var(--ink-dim); line-height: 1.7; font-size: 0.95rem; }
+
+        /* =========================================
+           LOOKBOOK / CONTACT SHEET
+           ========================================= */
+        .lookbook-section { padding: 20px 5% 100px; max-width: 1400px; margin: 0 auto; }
+        .lookbook-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 12px;
+        }
+        .lookbook-item { position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--panel); border-radius: 4px; }
+        .lookbook-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1); transition: filter 0.5s var(--ease), transform 0.6s var(--ease); }
+        .lookbook-item:hover img { filter: grayscale(0%); transform: scale(1.08); }
+        .lookbook-item span {
+            position: absolute; bottom: 12px; left: 12px; font-size: 0.65rem; color: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.65); padding: 4px 10px; border-radius: 2px; border-left: 2px solid var(--blood); backdrop-filter: blur(4px);
+        }
+        .lookbook-item.tall { grid-row: span 2; }
+
+        /* =========================================
+           FIELD REPORTS / REVIEWS
+           ========================================= */
+        .reports-section { padding: 20px 5% 100px; max-width: 1200px; margin: 0 auto; }
+        .reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .report-card {
+            border: 1px dashed var(--stitch); padding: 32px; position: relative; background: var(--panel); border-radius: 6px;
+            transition: 0.4s var(--ease);
+        }
+        .report-card:hover { border-color: var(--ink-dim); background: var(--elevated); }
+        .report-stamp {
+            position: absolute; top: 20px; right: 20px; font-size: 0.65rem; color: var(--blood);
+            border: 1px solid var(--blood); padding: 4px 10px; transform: rotate(8deg); font-family: 'Space Mono', monospace; text-shadow: 0 0 5px var(--blood-glow); box-shadow: 0 0 10px rgba(210,31,31,0.2);
+        }
+        .report-stars { color: var(--blood); letter-spacing: 3px; margin-bottom: 16px; font-size: 0.95rem; text-shadow: 0 0 5px var(--blood-glow); }
+        .report-quote { color: var(--ink-dim); font-size: 0.95rem; line-height: 1.65; margin-bottom: 22px; font-style: italic; }
+        .report-author { display: flex; align-items: center; gap: 14px; }
+        .report-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--void); border: 1px solid var(--line);
+            display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--ink);
+        }
+        .report-author-name { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+        .report-author-meta { font-size: 0.72rem; color: var(--ink-faint); margin-top: 2px; }
+        .disclaimer-note { text-align: center; font-size: 0.75rem; color: var(--ink-faint); margin-top: 40px; font-family: 'Space Mono', monospace; }
+
+        /* =========================================
+           MANIFEST / NEWSLETTER
+           ========================================= */
+        .manifest-section {
+            max-width: 900px; margin: 0 auto 100px; padding: 70px 5%; text-align: center;
+            border: 1px dashed var(--stitch); position: relative; background: var(--panel); border-radius: 6px;
+        }
+        .manifest-section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; margin-bottom: 16px; letter-spacing: 1px; }
+        .manifest-section p { color: var(--ink-dim); margin-bottom: 35px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        .manifest-form { display: flex; gap: 12px; max-width: 450px; margin: 0 auto; }
+        .manifest-form input {
+            flex: 1; padding: 16px; background: var(--void); border: 1px solid var(--line); color: white;
+            border-radius: 4px; font-family: 'Inter', sans-serif; outline: none; transition: 0.3s;
+        }
+        .manifest-form input:focus { border-color: var(--blood); box-shadow: 0 0 15px rgba(210,31,31,0.2); }
+        .manifest-form button {
+            background: var(--blood); color: white; border: none; padding: 0 28px; border-radius: 4px;
+            font-weight: 800; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; transition: 0.3s;
+        }
+        .manifest-form button:hover { background: #e32222; box-shadow: 0 0 25px var(--blood-glow); transform: translateY(-2px); }
+        .manifest-status { margin-top: 16px; font-size: 0.85rem; color: #00ff88; display: none; font-weight: 500; }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        footer { background: var(--void); border-top: 1px solid var(--line); padding: 80px 5% 0; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; max-width: 1400px; margin: 0 auto 60px; }
+        .footer-brand h1 { font-family: 'Bebas Neue', sans-serif; font-size: 3.6rem; letter-spacing: 4px; margin-bottom: 20px; text-shadow: 0 0 20px rgba(255,255,255,0.05); }
+        .footer-brand p { color: var(--ink-faint); line-height: 1.65; max-width: 420px; margin-bottom: 30px; font-size: 0.92rem; }
+        .social-links { display: flex; gap: 18px; }
         .social-links a {
-            width: 45px; height: 45px; border-radius: 50%; background: var(--bg-panel);
-            color: white; display: flex; justify-content: center; align-items: center;
-            text-decoration: none; border: 1px solid var(--border-light); transition: var(--transition-fast);
+            width: 46px; height: 46px; border-radius: 50%; background: var(--panel); color: white;
+            display: flex; justify-content: center; align-items: center; text-decoration: none;
+            border: 1px solid var(--line); transition: 0.3s; font-size: 1.1rem;
         }
-        .social-links a:hover { background: var(--text-main); color: var(--bg-dark); transform: scale(1.1); }
-        
-        .footer-links h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin-bottom: 20px; letter-spacing: 2px; color: var(--text-muted);}
+        .social-links a:hover { background: var(--ink); color: var(--void); transform: scale(1.1); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+
+        .footer-links h4 { font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 24px; color: var(--ink-dim); text-transform: uppercase; }
         .footer-links ul { list-style: none; }
-        .footer-links ul li { margin-bottom: 12px; }
-        .footer-links ul li a { color: #aaa; text-decoration: none; transition: var(--transition-fast); }
-        .footer-links ul li a:hover { color: var(--accent); padding-left: 5px; }
-        
+        .footer-links ul li { margin-bottom: 14px; }
+        .footer-links ul li a { color: var(--ink-faint); text-decoration: none; transition: 0.3s; font-size: 0.92rem; }
+        .footer-links ul li a:hover { color: var(--blood); padding-left: 6px; text-shadow: 0 0 8px var(--blood-glow); }
+
         .footer-bottom {
-            text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-muted); font-size: 0.8rem; font-family: monospace; text-transform: uppercase;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+            padding: 28px 0; border-top: 1px solid rgba(255,255,255,0.05); color: var(--ink-faint);
+            font-size: 0.75rem; font-family: 'Space Mono', monospace; text-transform: uppercase; max-width: 1400px; margin: 0 auto;
         }
 
         /* =========================================
            CART DRAWER & OVERLAYS
            ========================================= */
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 2000; visibility: hidden; opacity: 0; transition: var(--transition-smooth); }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 2000; visibility: hidden; opacity: 0; transition: 0.5s var(--ease); }
         .overlay.active { visibility: visible; opacity: 1; }
-        
-        .cart-drawer { 
-            position: fixed; top:0; right:-500px; width:100%; max-width: 450px; height: 100vh; 
-            background: var(--bg-light); z-index: 2001; transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-            padding: 30px; display: flex; flex-direction: column; 
-            border-left: 1px solid var(--border-light); box-shadow: -20px 0 50px rgba(0,0,0,0.9);
+
+        .cart-drawer {
+            position: fixed; top: 0; right: -500px; width: 100%; max-width: 460px; height: 100vh;
+            background: var(--panel); z-index: 2001; transition: right 0.5s var(--ease);
+            padding: 32px; display: flex; flex-direction: column;
+            border-left: 1px solid var(--line); box-shadow: -20px 0 60px rgba(0,0,0,0.9);
         }
         .cart-drawer.active { right: 0; }
-        
-        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 20px; margin-bottom: 25px; }
+
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 24px; }
         .cart-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; }
-        .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: var(--transition-fast); }
-        .close-btn:hover { color: var(--accent); transform: rotate(90deg); }
-        
-        .cart-items { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 10px; }
-        .cart-item {
-            display: flex; gap: 15px; background: var(--bg-panel); padding: 15px;
-            border-radius: 10px; border: 1px solid rgba(255,255,255,0.02);
-            animation: slideInRight 0.3s forwards;
-        }
-        @keyframes slideInRight { from { opacity:0; transform: translateX(50px); } to { opacity:1; transform: translateX(0); } }
-        
-        .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; }
+        .close-btn { background: none; border: none; color: var(--ink-dim); font-size: 1.8rem; cursor: pointer; transition: 0.3s; }
+        .close-btn:hover { color: var(--blood); transform: rotate(90deg); text-shadow: 0 0 10px var(--blood-glow); }
+
+        .cart-items { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 8px; }
+        .cart-empty { text-align: center; color: var(--ink-faint); margin-top: 80px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .cart-empty i { font-size: 2.8rem; opacity: 0.3; }
+        .cart-item { display: flex; gap: 16px; background: var(--elevated); padding: 16px; border-radius: 6px; border: 1px solid var(--line); animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+        .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; background: var(--void); border: 1px solid var(--line); }
         .cart-item-info { flex-grow: 1; }
-        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 5px; }
-        .cart-item-variant { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 5px;}
-        
-        .qty-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
-        .qty-controls button { background: transparent; border: 1px solid var(--text-muted); color: white; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; transition: var(--transition-fast);}
+        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 6px; font-weight: 600; }
+        .cart-item-variant { font-size: 0.78rem; color: var(--ink-faint); display: block; margin-bottom: 6px; }
+
+        .qty-controls { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+        .qty-controls button { background: transparent; border: 1px solid var(--ink-faint); color: white; width: 26px; height: 26px; border-radius: 3px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .qty-controls button:hover { border-color: white; background: rgba(255,255,255,0.1); }
-        .remove-item { color: var(--accent) !important; font-size: 0.8rem; border: none !important; margin-left: auto; text-transform: uppercase; letter-spacing: 1px; }
-        .remove-item:hover { text-decoration: underline; background: transparent !important; }
-        
-        .cart-footer { border-top: 1px solid var(--border-light); padding-top: 25px; margin-top: 20px; }
+        .remove-item { color: var(--blood) !important; font-size: 0.78rem; border: none !important; margin-left: auto; text-transform: uppercase; letter-spacing: 0.5px; background: none; cursor: pointer; transition: 0.3s; }
+        .remove-item:hover { text-shadow: 0 0 8px var(--blood-glow); }
+
+        .cart-footer { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 20px; }
         .cart-total-row { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.5rem; margin-bottom: 20px; }
+        .cart-note { font-size: 0.75rem; color: var(--ink-faint); text-align: center; margin-top: 12px; }
 
         /* =========================================
-           CHECKOUT MODAL (FIXED FOR 400 ERROR)
+           MODALS (checkout + size guide)
            ========================================= */
         .modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            width: 90%; max-width: 550px; background: var(--bg-panel); border: 1px solid var(--border-light);
-            border-radius: 15px; padding: 40px; z-index: 2002;
-            visibility: hidden; opacity: 0; transition: var(--transition-smooth);
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.94);
+            width: 90%; max-width: 580px; background: var(--panel); border: 1px solid var(--line);
+            border-radius: 8px; padding: 45px; z-index: 2002;
+            visibility: hidden; opacity: 0; transition: 0.4s var(--ease);
             box-shadow: 0 30px 60px rgba(0,0,0,0.9); max-height: 90vh; overflow-y: auto;
         }
         .modal.active { visibility: visible; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 10px; text-align: center; letter-spacing: 2px;}
-        .modal p.sub { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;}
-        
-        .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-        .form-group { flex: 1; margin-bottom: 15px; }
-        .form-group input, .form-group textarea { 
-            width: 100%; padding: 15px; background: #050505; border: 1px solid var(--border-light);
-            color: white; border-radius: 6px; font-family: 'Inter', sans-serif; outline: none;
-            transition: var(--transition-fast);
-        }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
-        .form-group textarea { resize: none; }
-        
-        .form-status { margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; padding: 10px; border-radius: 6px; display: none;}
-        .form-status.ok { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid #00ff88; display: block;}
-        .form-status.err { background: rgba(230,0,0,0.1); color: var(--accent); border: 1px solid var(--accent); display: block;}
+        .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--ink-dim); font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
+        .modal-close:hover { color: var(--blood); text-shadow: 0 0 10px var(--blood-glow); }
+        .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; margin-bottom: 10px; text-align: center; letter-spacing: 2px; }
+        .modal p.sub { text-align: center; color: var(--ink-dim); font-size: 0.9rem; margin-bottom: 26px; }
 
-        /* Responsive */
+        .order-summary { background: var(--elevated); border: 1px dashed var(--stitch); padding: 18px; border-radius: 6px; margin-bottom: 26px; }
+        .order-summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--ink-dim); padding: 6px 0; }
+        .order-summary-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.05rem; border-top: 1px solid var(--line); margin-top: 10px; padding-top: 12px; color: var(--ink); }
+
+        .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
+        .form-group { flex: 1; margin-bottom: 16px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 15px; background: var(--void); border: 1px solid var(--line);
+            color: white; border-radius: 4px; font-family: 'Inter', sans-serif; outline: none; transition: 0.3s; font-size: 0.9rem;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--blood); box-shadow: 0 0 12px rgba(210,31,31,0.2); }
+        .form-group textarea { resize: none; }
+
+        /* Custom Checkbox for TOS */
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 10px; margin-bottom: 24px; cursor: pointer; }
+        .checkbox-group input[type="checkbox"] {
+            appearance: none; background-color: var(--void); margin: 0; font: inherit; color: currentColor; width: 1.15em; height: 1.15em; border: 1px solid var(--ink-dim); border-radius: 0.15em; display: grid; place-content: center; cursor: pointer; transition: 0.2s; padding: 0; flex-shrink: 0; margin-top: 3px;
+        }
+        .checkbox-group input[type="checkbox"]::before { content: ""; width: 0.65em; height: 0.65em; transform: scale(0); transition: 120ms transform ease-in-out; box-shadow: inset 1em 1em var(--blood); background-color: transform-origin; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); }
+        .checkbox-group input[type="checkbox"]:checked { border-color: var(--blood); }
+        .checkbox-group input[type="checkbox"]:checked::before { transform: scale(1); }
+        .checkbox-group label { font-size: 0.78rem; color: var(--ink-dim); line-height: 1.5; cursor: pointer; }
+        .checkbox-group label strong { color: var(--blood); }
+
+        .form-status { margin-top: 16px; text-align: center; font-size: 0.9rem; font-weight: bold; padding: 12px; border-radius: 4px; display: none; }
+        .form-status.ok { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid #00ff88; display: block; }
+        .form-status.err { background: rgba(210,31,31,0.1); color: var(--blood); border: 1px solid var(--blood); display: block; }
+
+        /* Size guide table */
+        .size-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .size-table th, .size-table td { padding: 12px; text-align: center; border: 1px solid var(--line); }
+        .size-table th { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--ink-dim); background: var(--elevated); }
+        .size-guide-note { font-size: 0.8rem; color: var(--ink-faint); margin-top: 20px; line-height: 1.6; text-align: center; }
+
+        /* Lightbox */
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2500; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.4s var(--ease); cursor: zoom-out; backdrop-filter: blur(10px); }
+        .lightbox.active { visibility: visible; opacity: 1; }
+        .lightbox img { max-width: 85%; max-height: 85%; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); }
+        .lightbox-close { position: absolute; top: 30px; right: 40px; font-size: 2.2rem; color: white; background: none; border: none; cursor: pointer; transition: 0.3s; }
+        .lightbox-close:hover { color: var(--blood); transform: scale(1.1); }
+
+        /* Toasts */
+        .toast-container { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 3200; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+        .toast {
+            background: rgba(15,15,14,0.95); border: 1px solid #00ff8888; padding: 14px 24px; border-radius: 4px;
+            font-size: 0.85rem; letter-spacing: 0.5px; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            display: flex; align-items: center; gap: 12px; animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1), toastOut 0.4s ease 2.7s forwards; backdrop-filter: blur(8px);
+        }
+        .toast i { color: #00ff88; font-size: 1.1rem; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-15px); } }
+
+        /* =========================================
+           RESPONSIVE (Mobile First Adjustments)
+           ========================================= */
+        @media (max-width: 1024px) {
+            .hero-split { gap: 40px; padding-top: 120px; }
+            .product-title { font-size: 4rem; }
+        }
+
         @media (max-width: 992px) {
-            .hero-split { flex-direction: column; padding-top: 100px; gap: 30px; }
-            .main-image-wrapper { height: 50vh; }
-            .product-title { font-size: 3.5rem; }
-            .footer-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; background: var(--panel); border: 1px solid var(--line); color: white; cursor: pointer; transition: 0.3s; }
+            .hamburger:hover { color: var(--blood); border-color: var(--blood); box-shadow: 0 0 15px var(--blood-glow); }
+            
+            .hero-split { flex-direction: column; padding-top: 110px; gap: 35px; align-items: center; }
+            .gallery-container { position: static; width: 100%; max-width: 650px; }
+            .product-info { width: 100%; max-width: 650px; }
+            
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
             .social-links { justify-content: center; }
             .form-row { flex-direction: column; gap: 0; }
+            .spec-strip { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .lookbook-grid { grid-auto-rows: 180px; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-split { padding: 90px 5% 40px; }
+            .main-image-wrapper { height: 45vh; }
+            .product-title { font-size: 3.2rem; }
+            .price-current { font-size: 2.2rem; }
+            .size-options { gap: 6px; }
+            .size-box { padding: 12px 0; font-size: 0.85rem; }
+            .lookbook-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+            .lore-title { font-size: 2.8rem; }
+            .manifest-form { flex-direction: column; }
+            .manifest-form button { padding: 16px; margin-top: 10px; }
+            .spec-strip { grid-template-columns: 1fr 1fr; }
+            
+            /* Show sticky CTA on mobile */
+            .sticky-cta { display: flex; }
+            /* Add bottom padding to body so CTA doesn't cover footer info */
+            body { padding-bottom: 70px; }
+        }
+        
+        @media (max-width: 480px) {
+            .main-image-wrapper { height: 40vh; }
+            .product-title { font-size: 2.6rem; }
+            .product-desc { font-size: 0.95rem; }
+            .spec-strip { grid-template-columns: 1fr; }
+            .lookbook-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
+            .cart-drawer { width: 100%; right: -100%; }
+            .modal { width: 95%; padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
 
+<div class="grain"></div>
+
 <div id="preloader">
     <div class="loader-logo">THRIVER</div>
+    <div class="loader-tag mono">Est. 2025</div>
 </div>
 
 <nav id="navbar">
-    <a href="#" class="logo">THRIVER</a>
+    <a href="#top" class="logo">THRIVER</a>
+    <ul class="nav-links">
+        <li><a href="#top">Drop 001</a></li>
+        <li><a href="#ethos">Manifesto</a></li>
+        <li><a href="#lookbook">Lookbook</a></li>
+        <li><a href="#reports">Reports</a></li>
+    </ul>
     <div class="nav-controls">
-        <a href="#" class="cart-toggle" id="cartToggle">
+        <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+        <a href="#" class="icon-btn" id="cartToggle" aria-label="Otvori korpu">
             <i class="fas fa-shopping-bag"></i>
             <span id="cartCount">0</span>
         </a>
     </div>
 </nav>
 
-<section class="hero-split">
-    
+<div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose"><i class="fas fa-xmark"></i></button>
+    <a href="#top">Drop 001</a>
+    <a href="#ethos">Manifesto</a>
+    <a href="#lookbook">Lookbook</a>
+    <a href="#reports">Reports</a>
+</div>
+
+<section class="hero-split" id="top">
+
     <div class="gallery-container">
-        <div class="main-image-wrapper">
-            <button class="gallery-nav-btn prev-btn" id="galPrev"><i class="fas fa-chevron-left"></i></button>
-            <img src="assets/blackfront.png" id="mainGalleryImage" alt="Thriver Hoodie">
-            <button class="gallery-nav-btn next-btn" id="galNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="main-image-wrapper frame-corners" id="lightboxTrigger">
+            <span class="frame-tag mono">Phantom Black</span>
+            <button class="gallery-nav-btn prev-btn" id="galPrev" aria-label="Prethodna slika"><i class="fas fa-chevron-left"></i></button>
+            <img src="assets/blackfront.png" id="mainGalleryImage" alt="Thriver Signature Hoodie">
+            <button class="gallery-nav-btn next-btn" id="galNext" aria-label="Sljedeća slika"><i class="fas fa-chevron-right"></i></button>
+            <span class="frame-index mono" id="frameIndex">01 / 03</span>
         </div>
-        <div class="thumbnail-strip" id="thumbnailStrip">
-            </div>
+        <div class="thumbnail-strip" id="thumbnailStrip"></div>
     </div>
 
     <div class="product-info">
-        <div class="badge"><i class="fas fa-bolt"></i> LIMITED PRE-ORDER</div>
-        <h1 class="product-title">THE SIGNATURE HOODIE</h1>
-        <p class="product-desc">Ostani fokusiran, radi u tišini, pusti da rezultati govore. Premium mješavina pamuka dizajnirana za svakodnevni hustle. Nema nazad.</p>
+        <div class="hang-tag stitched"><i class="fas fa-bolt"></i> Drop 001 — Ekskluzivna Serija</div>
 
-        <div class="timer-box">
-            <div class="time-col"><span class="time-val" id="days">00</span><span class="time-lbl">Days</span></div>
-            <div class="time-col"><span class="time-val">:</span></div>
-            <div class="time-col"><span class="time-val" id="hours">00</span><span class="time-lbl">Hours</span></div>
-            <div class="time-col"><span class="time-val">:</span></div>
-            <div class="time-col"><span class="time-val" id="minutes">00</span><span class="time-lbl">Mins</span></div>
-            <div class="time-col"><span class="time-val">:</span></div>
-            <div class="time-col"><span class="time-val" id="seconds">00</span><span class="time-lbl">Secs</span></div>
+        <h1 class="product-title">The Signature Hoodie</h1>
+        <span class="product-sku mono" id="skuLabel">SKU: THR-SIG-HD-BLK</span>
+
+        <p class="product-desc">Kruna premium streetweara. Čiste linije, teški materijali i beskompromisan dizajn. Stvoren za ulicu, izgrađen da traje. Nema nazad.</p>
+
+        <div class="info-tabs">
+            <button class="tab-btn active" data-tab="tabDetails">Detalji</button>
+            <button class="tab-btn" data-tab="tabMaterial">Izrada</button>
+            <button class="tab-btn" data-tab="tabShipping">Pravila & Dostava</button>
+        </div>
+        <div class="tab-panel active" id="tabDetails">
+            <ul>
+                <li>Teška, oversized silueta — dominantan ulični fit.</li>
+                <li>Metalni YKK zip sa custom gravurom THRIVER loga.</li>
+                <li>Skrivena poruka utisnuta unutar kapuljače.</li>
+                <li>Unisex fit — model nosi veličinu M.</li>
+            </ul>
+        </div>
+        <div class="tab-panel" id="tabMaterial">
+            <p>80% teški pamuk / 20% premium poliester, masivni 380 gsm fleece. Pranje na 30°C naopako, bez izbjeljivača, ne sušiti u mašini kako bi materijal i print zadržali luksuzni finiš godinama.</p>
+        </div>
+        <div class="tab-panel" id="tabShipping">
+            <p>Šije se direktno po tvojoj narudžbi u ograničenim serijama (isprouka 10–15 radnih dana). Trenutno isključivo online kartično plaćanje (opcija pouzeća stiže uskoro). <strong>Nema povrata troškova</strong> ukoliko je proizvod već poslan i sašiven (ToS).</p>
+        </div>
+
+        <div class="scarcity-box">
+            <div class="scarcity-label">
+                <span>Rezervisano iz ovog dropa</span>
+                <strong id="scarcityCount">42 / 60</strong>
+            </div>
+            <div class="scarcity-track"><div class="scarcity-fill" id="scarcityFill"></div></div>
         </div>
 
         <div class="options-container">
             <div class="option-group">
-                <div class="option-label"><span>Boja</span> <span id="colorNameLabel" style="color: white; font-weight:bold;">Phantom Black</span></div>
+                <div class="option-label"><span>Boja</span> <span id="colorNameLabel" style="color:white; font-weight:bold;">Phantom Black</span></div>
                 <div class="color-options">
-                    <div class="color-circle active" data-color="black" data-name="Phantom Black" style="background: #111;"></div>
-                    <div class="color-circle" data-color="grey" data-name="Cement Grey" style="background: #555;"></div>
-                    <div class="color-circle" data-color="bone" data-name="Vintage Bone" style="background: #e3e0d8;"></div>
-                    <div class="color-circle" data-color="pink" data-name="Oriental Pink" style="background: #C69191;"></div>
+                    <div class="color-circle active" data-color="black" data-name="Phantom Black" data-sku="BLK" style="background:#111;"></div>
+                    <div class="color-circle" data-color="grey" data-name="Cement Grey" data-sku="GRY" style="background:#555;"></div>
+                    <div class="color-circle" data-color="bone" data-name="Vintage Bone" data-sku="BNE" style="background:#e3e0d8;"></div>
+                    <div class="color-circle" data-color="pink" data-name="Oriental Pink" data-sku="PNK" style="background:#C69191;"></div>
                 </div>
             </div>
 
             <div class="option-group">
-                <div class="option-label"><span>Veličina</span> <span style="cursor:pointer; text-decoration:underline;">Size Guide</span></div>
+                <div class="option-label"><span>Veličina</span> <button id="sizeGuideBtn" type="button">Size Guide</button></div>
                 <div class="size-options">
                     <div class="size-box">S</div>
                     <div class="size-box active">M</div>
                     <div class="size-box">L</div>
-                    <div class="size-box">XL</div>
-                    <div class="size-box">XXL</div>
+                    <div class="size-box" data-premium="true">XL</div>
+                    <div class="size-box" data-premium="true">XXL</div>
                 </div>
+                <div style="font-size: 0.65rem; color: var(--ink-faint); margin-top: 8px; font-family: 'Space Mono', monospace;">* Veličine XL i XXL zahtijevaju više materijala (+5.00 €).</div>
             </div>
         </div>
 
         <div class="price-row">
-            <span class="price-current">49.99 €</span>
+            <span class="price-current" id="mainPriceDisplay">49.99 €</span>
             <span class="price-old">79.99 €</span>
+            <span class="price-save mono">Preorder Popust</span>
         </div>
 
-        <button class="add-to-cart-btn" id="addToCartBtn">PREDNARUČI ODMAH</button>
-        <div class="shipping-info"><i class="fas fa-box-open"></i> Šije se po narudžbi. Isporuka u roku od 10-15 dana.</div>
+        <button class="add-to-cart-btn" id="addToCartBtn">Prednaruči Odmah</button>
+
+        <div class="trust-strip">
+            <div class="trust-item"><i class="fas fa-scissors"></i> Premium Izrada</div>
+            <div class="trust-item"><i class="fas fa-credit-card"></i> Sigurno Online Plaćanje</div>
+            <div class="trust-item"><i class="fas fa-box-open"></i> Isporuka 10-15 dana</div>
+        </div>
     </div>
 </section>
+
+<div class="sticky-cta" id="stickyCta">
+    <div class="sticky-cta-info">
+        <span class="sticky-cta-name">Signature Hoodie</span>
+        <span class="sticky-cta-price" id="stickyPriceDisplay">49.99 €</span>
+    </div>
+    <button class="sticky-cta-btn" id="stickyCtaBtn">Dodaj u Korpu</button>
+</div>
 
 <div class="marquee-wrapper">
     <div class="marquee-content">
-        THRIVE IN SILENCE ✦ LET SUCCESS BE YOUR NOISE ✦ WELCOME TO THE MOVEMENT ✦ NO EXCUSES ✦ 
-        THRIVE IN SILENCE ✦ LET SUCCESS BE YOUR NOISE ✦ WELCOME TO THE MOVEMENT ✦ NO EXCUSES ✦
+        THRIVE IN SILENCE ✦ LET SUCCESS BE YOUR NOISE ✦ WELCOME TO THE MOVEMENT ✦ PREMIUM STREETWEAR ✦
+        THRIVE IN SILENCE ✦ LET SUCCESS BE YOUR NOISE ✦ WELCOME TO THE MOVEMENT ✦ PREMIUM STREETWEAR ✦
     </div>
 </div>
 
-<section class="lore-section">
-    <h2 class="lore-title">THE THRIVER ETHOS</h2>
+<div class="spec-strip reveal">
+    <div class="spec-item"><i class="fas fa-weight-hanging"></i><h5>380 GSM</h5><p>Teški masivni pamuk</p></div>
+    <div class="spec-item"><i class="fas fa-shirt"></i><h5>Oversized Fit</h5><p>Autentična ulična silueta</p></div>
+    <div class="spec-item"><i class="fas fa-gem"></i><h5>Premium Feel</h5><p>Detalji koji odvajaju od mase</p></div>
+    <div class="spec-item"><i class="fas fa-shield-halved"></i><h5>Doživotna izrada</h5><p>Ojačani šavovi</p></div>
+</div>
+
+<section class="lore-section" id="ethos">
+    <div class="section-eyebrow mono">The Manifesto</div>
+    <h2 class="lore-title reveal">Nismo ovdje da pričamo. Ovdje smo da preuzmemo.</h2>
     <div class="lore-grid">
-        <div class="lore-card">
-            <i class="fas fa-gem"></i>
-            <h3>UNCOMPROMISING QUALITY</h3>
-            <p>Koristimo samo najkvalitetnije materijale. 80% teški pamuk, 20% premium poliester. Svaki duks je kreiran da izdrži najintenzivnije treninge i svakodnevni grind.</p>
+        <div class="lore-card reveal">
+            <span class="lore-tag mono">[ Quality ]</span>
+            <h3>Uncompromising Quality</h3>
+            <p>Odbijamo masovnu proizvodnju. Koristimo samo najkvalitetnije materijale (80% teški pamuk, 380 GSM). Svaki komad je krojen da ponudi čist luksuz i udobnost na ulici.</p>
         </div>
-        <div class="lore-card">
-            <i class="fas fa-eye-slash"></i>
-            <h3>HIDDEN DETAILS</h3>
-            <p>Minimalistički logo naprijed, snažna poruka na leđima. Metalni zatvarači sa gravurom i skrivena poruka unutar svakog komada koja te podsjeća zašto si počeo.</p>
+        <div class="lore-card reveal">
+            <span class="lore-tag mono">[ Detail ]</span>
+            <h3>Hidden Details</h3>
+            <p>Estetika je u detaljima. Minimalistički logo, snažna poruka na leđima, metalni YKK zatvarači sa gravurom i oštar dizajn kreiraju komad koji moraš imati čim ga vidiš.</p>
         </div>
-        <div class="lore-card">
-            <i class="fas fa-globe"></i>
-            <h3>THE MOVEMENT</h3>
-            <p>Thriver nije samo komad odjeće. To je mentalitet. Nismo ovdje da pričamo, ovdje smo da radimo. Kad obučeš Thriver, postaješ dio elitnog kruga.</p>
+        <div class="lore-card reveal">
+            <span class="lore-tag mono">[ Movement ]</span>
+            <h3>The Movement</h3>
+            <p>Thriver nije merch. To je streetwear brend za one koji rade u tišini. Kad obučeš Thriver, nosiš mentalitet, čistu estetiku i pripadaš krugu onih koji znaju šta žele.</p>
         </div>
     </div>
 </section>
+
+<section class="lookbook-section" id="lookbook">
+    <div class="section-eyebrow mono">Visuals</div>
+    <h2 class="lore-title reveal">Contact Sheet — Drop 001</h2>
+    <div class="lookbook-grid">
+        <div class="lookbook-item tall reveal"><img src="assets/blackfront.png" alt="Frame 01" loading="lazy"><span class="mono">Phantom / 01</span></div>
+        <div class="lookbook-item reveal"><img src="assets/blackback.png" alt="Frame 02" loading="lazy"><span class="mono">Phantom / 02</span></div>
+        <div class="lookbook-item reveal"><img src="assets/grayfront.png" alt="Frame 03" loading="lazy"><span class="mono">Cement / 03</span></div>
+        <div class="lookbook-item tall reveal"><img src="assets/graypreview.png" alt="Frame 04" loading="lazy"><span class="mono">Cement / 04</span></div>
+        <div class="lookbook-item reveal"><img src="assets/whitefront.png" alt="Frame 05" loading="lazy"><span class="mono">Bone / 05</span></div>
+        <div class="lookbook-item reveal"><img src="assets/pinkfront.png" alt="Frame 06" loading="lazy"><span class="mono">Pink / 06</span></div>
+    </div>
+</section>
+
+<section class="reports-section" id="reports">
+    <div class="section-eyebrow mono">Field Reports</div>
+    <h2 class="lore-title reveal">Utisci iz prvog reda.</h2>
+    <div class="reports-grid">
+        <div class="report-card reveal">
+            <span class="report-stamp mono">Verified</span>
+            <div class="report-stars">★★★★★</div>
+            <p class="report-quote">Ovaj duks je ludilo. Kvalitet materijala i taj premium feel se odmah osjeti. Ne skidam ga.</p>
+            <div class="report-author">
+                <div class="report-avatar mono">AH</div>
+                <div><div class="report-author-name">Amar H.</div><div class="report-author-meta">Sarajevo · Phantom Black, L</div></div>
+            </div>
+        </div>
+        <div class="report-card reveal">
+            <span class="report-stamp mono">Verified</span>
+            <div class="report-stars">★★★★★</div>
+            <p class="report-quote">Clean estetika. Detalji na zipu i kroj su tačno ono što mi je trebalo za svaki dan.</p>
+            <div class="report-author">
+                <div class="report-avatar mono">LM</div>
+                <div><div class="report-author-name">Lamija M.</div><div class="report-author-meta">Tuzla · Vintage Bone, M</div></div>
+            </div>
+        </div>
+        <div class="report-card reveal">
+            <span class="report-stamp mono">Verified</span>
+            <div class="report-stars">★★★★☆</div>
+            <p class="report-quote">Malo se duže čeka jer se šije po narudžbi, ali brate isplati se svaki cent. Vrhunski streetwear.</p>
+            <div class="report-author">
+                <div class="report-avatar mono">DK</div>
+                <div><div class="report-author-name">Denis K.</div><div class="report-author-meta">Mostar · Cement Grey, XL</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="manifest-section reveal">
+    <h2>Ekskluzivni Pristup</h2>
+    <p>Prijavi se na listu i budi prvi koji zna kad izađe sljedeći drop. Bez spama, samo čista ulična estetika.</p>
+    <form class="manifest-form" id="manifestForm">
+        <input type="email" placeholder="tvoj@email.com" required>
+        <button type="submit">Prijavi Se</button>
+    </form>
+    <p class="manifest-status" id="manifestStatus">Uspješno! Dobrodošao u krug.</p>
+</div>
 
 <footer>
     <div class="footer-grid">
@@ -486,29 +852,30 @@
             <h1>THRIVER</h1>
             <p>Osnovano u tišini. Izgrađeno kroz rad. Thriver je premium streetwear brend posvećen onima koji teže savršenstvu bez potrebe za aplauzom. Est. 2025.</p>
             <div class="social-links">
-                <a href="https://www.instagram.com/thriver.wear/"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@thriver.wear"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.instagram.com/thriver.wear/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@thriver.wear" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
         <div class="footer-links">
-            <h4>SHOP</h4>
+            <h4>Shop</h4>
             <ul>
-                <li><a href="#">The Signature Drop</a></li>
-                <li><a href="#">Veličine i Fit</a></li>
+                <li><a href="#top">The Signature Drop</a></li>
+                <li><a href="#" id="footerSizeGuide">Veličine i Fit</a></li>
                 <li><a href="#">Praćenje Narudžbe</a></li>
             </ul>
         </div>
         <div class="footer-links">
-            <h4>PODRŠKA</h4>
+            <h4>Podrška & Pravila</h4>
             <ul>
                 <li><a href="#">Kontaktiraj Nas</a></li>
-                <li><a href="#">Dostava i Povrat</a></li>
-                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Politika Kolačića</a></li>
             </ul>
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; 2026 THRIVER CLOTHING. ALL RIGHTS RESERVED. <br> "STAY THRIVER."
+        <span>&copy; 2026 Thriver Clothing. All Rights Reserved.</span>
+        <span>Batch No. TH-2026-001 · Stay Thriver.</span>
     </div>
 </footer>
 
@@ -516,235 +883,280 @@
 
 <aside class="cart-drawer" id="cartDrawer">
     <div class="cart-header">
-        <h3>TVOJA KORPA</h3>
-        <button class="close-btn" id="closeCart"><i class="fas fa-xmark"></i></button>
+        <h3>Tvoja Korpa</h3>
+        <button class="close-btn" id="closeCart" aria-label="Zatvori korpu"><i class="fas fa-xmark"></i></button>
     </div>
-    <div class="cart-items" id="cartItems">
-        </div>
+    <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer">
-        <div class="cart-total-row">
-            <span>UKUPNO</span>
-            <span id="cartTotal">0.00 €</span>
-        </div>
-        <button class="add-to-cart-btn" id="checkoutBtn" style="padding: 20px; font-size: 1rem;">NASTAVI NA PLAĆANJE</button>
+        <div class="cart-total-row"><span>Ukupno</span><span id="cartTotal">0.00 €</span></div>
+        <button class="add-to-cart-btn" id="checkoutBtn" style="padding:18px; font-size:0.95rem;">Idi na Plaćanje</button>
+        <p class="cart-note">Plaćanje isključivo online (karticom). Pouzeće uskoro.</p>
     </div>
 </aside>
 
+<div class="modal" id="sizeGuideModal">
+    <button class="modal-close" id="closeSizeGuide"><i class="fas fa-xmark"></i></button>
+    <h2>Size Guide</h2>
+    <p class="sub">Mjere su u centimetrima, izmjerene ravno na proizvodu.</p>
+    <table class="size-table">
+        <thead><tr><th>Veličina</th><th>Grudi</th><th>Dužina</th><th>Rukav</th></tr></thead>
+        <tbody>
+            <tr><td>S</td><td>58</td><td>68</td><td>62</td></tr>
+            <tr><td>M</td><td>61</td><td>70</td><td>64</td></tr>
+            <tr><td>L</td><td>64</td><td>72</td><td>66</td></tr>
+            <tr><td>XL</td><td>67</td><td>74</td><td>68</td></tr>
+            <tr><td>XXL</td><td>70</td><td>76</td><td>70</td></tr>
+        </tbody>
+    </table>
+    <p class="size-guide-note">Fit je oversized po dizajnu — za striktniji fit uzmi veličinu manju od uobičajene. <br><span style="color:var(--blood)">* XL i XXL uključuju dodatak na cijenu zbog veće potrošnje materijala.</span></p>
+</div>
+
 <div class="modal" id="checkoutModal">
-    <h2>ZAVRŠI KUPUJU</h2>
-    <p class="sub">Sigurna naplata. Plaćaš prilikom preuzimanja (Pouzećem).</p>
+    <button class="modal-close" id="closeCheckout"><i class="fas fa-xmark"></i></button>
+    <h2>Završi Kupovinu</h2>
+    <p class="sub">Sigurna online naplata. (Opcija plaćanja pouzećem stiže uskoro).</p>
+
+    <div class="order-summary" id="orderSummary"></div>
+
     <form id="checkoutForm">
-        <div class="form-group">
-            <input type="text" name="name" placeholder="Ime i Prezime" required>
-        </div>
+        <div class="form-group"><input type="text" name="name" placeholder="Ime i Prezime" required></div>
         <div class="form-row">
             <div class="form-group" style="margin-bottom:0;"><input type="tel" name="phone" placeholder="Broj Telefona" required></div>
             <div class="form-group" style="margin-bottom:0;"><input type="email" name="email" placeholder="Email Adresa" required></div>
         </div>
-        <div class="form-group">
-            <input type="text" name="address" placeholder="Adresa Stanovanja (Ulica i broj)" required>
-        </div>
+        <div class="form-group"><input type="text" name="address" placeholder="Adresa Stanovanja (Ulica i broj)" required></div>
         <div class="form-row">
             <div class="form-group" style="margin-bottom:0;"><input type="text" name="city" placeholder="Grad" required></div>
             <div class="form-group" style="margin-bottom:0;"><input type="text" name="zip" placeholder="Poštanski Broj" required></div>
         </div>
-        <div class="form-group">
-            <textarea name="note" placeholder="Napomena za kurira (Opcionalno)" rows="2"></textarea>
+        
+        <!-- Obavezni ToS Checkbox -->
+        <div class="checkbox-group">
+            <input type="checkbox" id="tosAccept" name="tosAccept" required>
+            <label for="tosAccept">
+                Prihvatam <strong>Terms of Service</strong> (Bez prava na povrat troškova nakon što je duks poslan i sašiven) i <strong>Politiku Kolačića (Cookies)</strong>.
+            </label>
         </div>
-        <button type="submit" class="add-to-cart-btn" style="padding: 15px; font-size: 1rem;">POTVRDI NARUDŽBU</button>
+
+        <button type="submit" class="add-to-cart-btn" style="padding:16px; font-size:1rem;">Idi na sigurnu naplatu <i class="fas fa-lock" style="margin-left: 8px; font-size: 0.85rem;"></i></button>
         <p id="formStatus" class="form-status"></p>
     </form>
 </div>
 
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-xmark"></i></button>
+    <img src="" id="lightboxImg" alt="Uvećan prikaz proizvoda">
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-    // --- 1. ASCII CONSOLE WARNING ---
-    const asciiStop = `
-      _______      _________      _____      ______     _
-     / _____ \\    |____ ____|    / ___ \\     | ____ \\   | |
-    / /     \\_\\       | |       / /   \\ \\    | |   \\ \\  | |
-    | |               | |      / /     \\ \\   | |   | |  | |
-    \\ \\______         | |      | |     | |   | |___/ /  | |
-     \\______ \\        | |      | |     | |   |  ____/   | |
-            \\ \\       | |      | |     | |   | |        | |
-     _      | |       | |      \\ \\     / /   | |        |_|
-    \\ \\_____/ /       | |       \\ \\___/ /    | |         _
-     \\_______/        |_|        \\_____/     |_|        |_|
+    console.log("%cSTOP", "color:#d21f1f; font-weight:bold; font-size:40px; font-family: monospace;");
+    console.log("%cOvo je developerska konzola. Ne kopiraj i ne lijepi tuđi kod ovdje — to može ugroziti tvoj nalog i podatke.", "color:#d21f1f; font-size:14px;");
 
-     Keep your account safe! Do not send any information from
-     here to anyone or paste any text here.
+    // --- BASE PRICE LOGIC ---
+    const BASE_PRICE = 49.99;
+    const PREMIUM_SURCHARGE = 5.00;
+    let currentSelectedPrice = BASE_PRICE;
 
-     If someone is asking you to copy or paste text here then
-     you're giving someone access to your account and data.
-    `;
-    console.log(`%c${asciiStop}`, "color: #e60000; font-weight: bold; font-family: monospace; font-size: 12px;");
-
-    // --- 2. PRELOADER & NAV SCROLL ---
+    // --- PRELOADER & NAV SCROLL ---
     window.addEventListener('load', () => {
         const preloader = document.getElementById('preloader');
         preloader.style.opacity = '0';
-        setTimeout(() => preloader.style.visibility = 'hidden', 1000);
+        setTimeout(() => preloader.style.visibility = 'hidden', 800);
     });
 
     window.addEventListener('scroll', () => {
-        const nav = document.getElementById('navbar');
-        if(window.scrollY > 50) nav.classList.add('scrolled');
-        else nav.classList.remove('scrolled');
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    // --- 3. THE 32-DAY TIMER (From Jul 3, 2026, 10:28 PM -> Aug 4, 2026) ---
-    const targetDate = new Date('2026-08-04T22:28:00').getTime();
-    
-    const timerInterval = setInterval(function() {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
+    // --- MOBILE NAV ---
+    const mobileNav = document.getElementById('mobileNav');
+    document.getElementById('hamburgerBtn').addEventListener('click', () => mobileNav.classList.add('active'));
+    document.getElementById('mobileNavClose').addEventListener('click', () => mobileNav.classList.remove('active'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('active')));
 
-        if (distance < 0) {
-            clearInterval(timerInterval);
-            document.querySelector('.timer-box').innerHTML = "<h3 style='color:var(--accent); text-align:center; width:100%;'>PRE-ORDER CLOSED</h3>";
-            return;
-        }
+    // --- SCROLL REVEAL ---
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in-view'); revealObserver.unobserve(entry.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-        document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-        document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-        document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
-    }, 1000);
+    // --- TOASTS ---
+    function showToast(message) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fas fa-circle-check"></i> ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
 
-    // --- 4. SICK IMAGE GALLERY LOGIC ---
-    // Mock slike grupisane po bojama
+    // --- PRODUCT TABS ---
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(this.dataset.tab).classList.add('active');
+        });
+    });
+
+    // --- IMAGE GALLERY ---
     const GALLERY_DATA = {
-        black: [
-            "assets/blackfront.png",
-            "assets/blackback.png",
-            "assets/blackpreview.png"
-        ],
-        grey: [
-            "assets/grayfront.png",
-            "assets/grayback.png",
-            "assets/graypreview.png"
-        ],
-        bone: [
-            "assets/whitefront.png",
-            "assets/whiteback.png",
-            "assets/whitepreview.png"
-        ],
-        pink: [
-            "assets/pinkfront.png",
-            "assets/pinkback.png",
-            "assets/pinkpreview.png"
-        ]
+        black: ["assets/blackfront.png", "assets/blackback.png", "assets/blackpreview.png"],
+        grey:  ["assets/grayfront.png", "assets/grayback.png", "assets/graypreview.png"],
+        bone:  ["assets/whitefront.png", "assets/whiteback.png", "assets/whitepreview.png"],
+        pink:  ["assets/pinkfront.png", "assets/pinkback.png", "assets/pinkpreview.png"]
     };
 
     let currentColor = 'black';
     let currentImageIndex = 0;
     const mainImg = document.getElementById('mainGalleryImage');
     const thumbStrip = document.getElementById('thumbnailStrip');
+    const frameIndexEl = document.getElementById('frameIndex');
+    const frameTagEl = document.querySelector('.frame-tag');
 
     function renderGallery() {
         const images = GALLERY_DATA[currentColor];
-        // Fade efekt za glatku tranziciju
         mainImg.style.opacity = 0;
         setTimeout(() => {
             mainImg.src = images[currentImageIndex];
             mainImg.style.opacity = 1;
-        }, 200);
+        }, 180);
 
-        // Render thumbnails
+        frameIndexEl.textContent = `0${currentImageIndex + 1} / 0${images.length}`;
         thumbStrip.innerHTML = images.map((src, index) => `
-            <img src="${src}" class="thumb-img ${index === currentImageIndex ? 'active' : ''}" 
+            <img src="${src}" class="thumb-img ${index === currentImageIndex ? 'active' : ''}"
                  onclick="setGalleryIndex(${index})" alt="Thumb ${index}">
         `).join('');
     }
 
-    function setGalleryIndex(index) {
-        currentImageIndex = index;
-        renderGallery();
-    }
+    function setGalleryIndex(index) { currentImageIndex = index; renderGallery(); }
 
     document.getElementById('galPrev').addEventListener('click', () => {
         const images = GALLERY_DATA[currentColor];
         currentImageIndex = (currentImageIndex === 0) ? images.length - 1 : currentImageIndex - 1;
         renderGallery();
     });
-
     document.getElementById('galNext').addEventListener('click', () => {
         const images = GALLERY_DATA[currentColor];
         currentImageIndex = (currentImageIndex === images.length - 1) ? 0 : currentImageIndex + 1;
         renderGallery();
     });
 
-    // Inicijalni render
     renderGallery();
 
-    // --- 5. UI SELEKCIJE (Color & Size) ---
+    // --- LIGHTBOX ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    document.getElementById('lightboxTrigger').addEventListener('click', (e) => {
+        if (e.target.closest('.gallery-nav-btn')) return;
+        lightboxImg.src = mainImg.src;
+        lightbox.classList.add('active');
+    });
+    function closeLightbox() { lightbox.classList.remove('active'); }
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+    // --- COLOR & SIZE SELECTION (With Price Logic) ---
+    const skuLabel = document.getElementById('skuLabel');
+    
+    function updatePriceDisplay() {
+        document.getElementById('mainPriceDisplay').innerText = currentSelectedPrice.toFixed(2) + ' €';
+        document.getElementById('stickyPriceDisplay').innerText = currentSelectedPrice.toFixed(2) + ' €';
+    }
+
     document.querySelectorAll('.color-circle').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             document.querySelectorAll('.color-circle').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            
-            // Update labele boje i galerije
+
             document.getElementById('colorNameLabel').innerText = this.getAttribute('data-name');
+            frameTagEl.textContent = this.getAttribute('data-name');
+            skuLabel.textContent = `SKU: THR-SIG-HD-${this.getAttribute('data-sku')}`;
             currentColor = this.getAttribute('data-color');
-            currentImageIndex = 0; // Reset index kad promijeni boju
+            currentImageIndex = 0;
             renderGallery();
         });
     });
 
     document.querySelectorAll('.size-box').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             document.querySelectorAll('.size-box').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+            
+            // Check if selected size has a premium surcharge (XL, XXL)
+            if (this.getAttribute('data-premium') === 'true') {
+                currentSelectedPrice = BASE_PRICE + PREMIUM_SURCHARGE;
+            } else {
+                currentSelectedPrice = BASE_PRICE;
+            }
+            updatePriceDisplay();
         });
     });
 
-    // --- 6. CART & CHECKOUT LOGIC (MAPPED TO SERVER.JS) ---
-    const ORDER_ENDPOINT = '/api/order';
-    let cart = JSON.parse(localStorage.getItem('thriver_cart_v2') || '[]');
+    // --- SIZE GUIDE MODAL ---
+    const sizeGuideModal = document.getElementById('sizeGuideModal');
+    function openSizeGuide() { overlay.classList.add('active'); sizeGuideModal.classList.add('active'); }
+    document.getElementById('sizeGuideBtn').addEventListener('click', openSizeGuide);
+    document.getElementById('footerSizeGuide').addEventListener('click', (e) => { e.preventDefault(); openSizeGuide(); });
+    document.getElementById('closeSizeGuide').addEventListener('click', closeModals);
 
-    function saveCart() { 
-        localStorage.setItem('thriver_cart_v2', JSON.stringify(cart)); 
-        renderCartUI(); 
+    // --- CART & CHECKOUT ---
+    const ORDER_ENDPOINT = '/api/checkout/session'; // Changed for online payment logic simulation
+    let cart = JSON.parse(localStorage.getItem('thriver_cart_v3') || '[]');
+
+    function saveCart() {
+        localStorage.setItem('thriver_cart_v3', JSON.stringify(cart));
+        renderCartUI();
     }
 
     function addToCart() {
-        const size = document.querySelector('.size-box.active').innerText;
+        const sizeBox = document.querySelector('.size-box.active');
+        const size = sizeBox.innerText;
         const colorName = document.querySelector('.color-circle.active').getAttribute('data-name');
         
-        // Kreiramo string koji server.js lako prepoznaje u Discordu (npr. "Signature Hoodie - Phantom Black, M")
+        // Dynamically grab price for the cart based on size
+        const itemPrice = sizeBox.getAttribute('data-premium') === 'true' ? (BASE_PRICE + PREMIUM_SURCHARGE) : BASE_PRICE;
+
         const itemName = `Signature Hoodie - ${colorName}, Size: ${size}`;
         const itemId = `sig-hoodie-${currentColor}-${size}`;
-        const price = 49.99;
-        const img = GALLERY_DATA[currentColor][0]; // Slika za korpu
+        const img = GALLERY_DATA[currentColor][0];
 
         const existing = cart.find(i => i.id === itemId);
-        if(existing) {
-            existing.qty += 1;
-        } else {
-            // Ubacujemo 'name' i 'price' jer tvoj server.js to traži!
-            cart.push({ id: itemId, name: itemName, img: img, price: price, qty: 1 });
-        }
-        
+        if (existing) { existing.qty += 1; }
+        else { cart.push({ id: itemId, name: itemName, img: img, price: itemPrice, qty: 1 }); }
+
         saveCart();
         openCartDrawer();
+        showToast(`Dodano u korpu — ${colorName}, ${size}`);
     }
 
     document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+    document.getElementById('stickyCtaBtn').addEventListener('click', addToCart);
+
+    // Sticky CTA logic
+    const stickyCta = document.getElementById('stickyCta');
+    const ctaObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => stickyCta.classList.toggle('show', !entry.isIntersecting));
+    }, { threshold: 0 });
+    ctaObserver.observe(document.getElementById('addToCartBtn'));
 
     function changeQty(id, delta) {
         const item = cart.find(i => i.id === id);
-        if(!item) return;
+        if (!item) return;
         item.qty += delta;
-        if(item.qty <= 0) cart = cart.filter(i => i.id !== id);
+        if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
         saveCart();
     }
 
     function renderCartUI() {
         const wrap = document.getElementById('cartItems');
-        let total = 0;
-        let count = 0;
+        let total = 0, count = 0;
 
         if (cart.length === 0) {
-            wrap.innerHTML = '<p style="text-align:center; color:#666; margin-top:50px;">Korpa je prazna.</p>';
+            wrap.innerHTML = '<div class="cart-empty"><i class="fas fa-bag-shopping"></i><span>Korpa je prazna.</span></div>';
         } else {
             wrap.innerHTML = cart.map(i => {
                 total += (i.price * i.qty);
@@ -755,10 +1167,10 @@
                     <div class="cart-item-info">
                         <h4>${i.name.split(',')[0]}</h4>
                         <span class="cart-item-variant">${i.name.split(',')[1]}</span>
-                        <p style="color:var(--text-main); font-weight:bold; margin-top:5px;">${i.price.toFixed(2)} €</p>
+                        <p style="color:var(--ink); font-weight:bold; margin-top:4px;">${i.price.toFixed(2)} €</p>
                         <div class="qty-controls">
                             <button onclick="changeQty('${i.id}', -1)">−</button>
-                            <span style="font-size:0.9rem;">${i.qty}</span>
+                            <span style="font-size:0.9rem; width:16px; text-align:center;">${i.qty}</span>
                             <button onclick="changeQty('${i.id}', 1)">+</button>
                             <button class="remove-item" onclick="changeQty('${i.id}', -999)">Ukloni</button>
                         </div>
@@ -771,80 +1183,95 @@
         document.getElementById('cartTotal').innerText = total.toFixed(2) + ' €';
     }
 
-    // Modal Control
+    // Modal control
     const overlay = document.getElementById('mainOverlay');
     const cartDrawer = document.getElementById('cartDrawer');
     const checkoutModal = document.getElementById('checkoutModal');
 
     function openCartDrawer() { overlay.classList.add('active'); cartDrawer.classList.add('active'); }
-    function closeModals() { overlay.classList.remove('active'); cartDrawer.classList.remove('active'); checkoutModal.classList.remove('active'); }
+    function closeModals() {
+        overlay.classList.remove('active');
+        cartDrawer.classList.remove('active');
+        checkoutModal.classList.remove('active');
+        sizeGuideModal.classList.remove('active');
+    }
 
     document.getElementById('cartToggle').addEventListener('click', (e) => { e.preventDefault(); openCartDrawer(); });
     document.getElementById('closeCart').addEventListener('click', closeModals);
+    document.getElementById('closeCheckout').addEventListener('click', closeModals);
     overlay.addEventListener('click', closeModals);
 
     document.getElementById('checkoutBtn').addEventListener('click', () => {
-        if(cart.length === 0) return;
+        if (cart.length === 0) return;
         cartDrawer.classList.remove('active');
+        renderOrderSummary();
         checkoutModal.classList.add('active');
     });
 
-    // --- 7. CHECKOUT SUBMIT TO EXPRESS SERVER ---
+    function renderOrderSummary() {
+        const wrap = document.getElementById('orderSummary');
+        const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+        wrap.innerHTML = cart.map(i => `
+            <div class="order-summary-row"><span>${i.name} × ${i.qty}</span><span>${(i.price * i.qty).toFixed(2)} €</span></div>
+        `).join('') + `<div class="order-summary-total"><span>Ukupno za platiti (Kartica)</span><span>${total.toFixed(2)} €</span></div>`;
+    }
+
+    // --- CHECKOUT SUBMIT (WITH TOS CHECK) ---
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target;
         const status = document.getElementById('formStatus');
-        
-        // Prikupljamo formu - OVDJE JE SADA 'phone' POLJE KOJE JE FALILO
+
+        // Form submission logic (Card Payment Gateway Redirect Simulation)
         const formData = new FormData(form);
         const customer = Object.fromEntries(formData.entries());
-        
-        let totalVal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+        const totalVal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
 
-        const payload = {
-            customer: customer,
-            items: cart, // items vec ima .name, .price i .qty sto server treba
-            total: totalVal
-        };
+        const payload = { customer: customer, items: cart, total: totalVal };
 
-        status.textContent = 'Procesiranje narudžbe...';
-        status.className = 'form-status'; // Reset klase
+        status.textContent = 'Konektovanje na payment gateway...';
+        status.className = 'form-status';
         status.style.display = 'block';
 
+        // Simulacija prebacivanja na procesor kartica (Stripe / Monri itd.)
         try {
+            // Ovdje bi išao pravi fetch na backend za kreiranje Payment Session-a
+            /*
             const res = await fetch(ORDER_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-
             const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || 'Greška na serveru');
-            }
-
-            status.textContent = 'NARUDŽBA USPJEŠNA! Očekujte poziv kurira.';
-            status.className = 'form-status ok';
+            window.location.href = data.checkoutUrl; 
+            */
             
-            // Isprazni korpu i formu
-            cart = [];
-            saveCart();
-            form.reset();
-            
-            // Zatvori modal nakon 3 sekunde
-            setTimeout(closeModals, 3000);
+            setTimeout(() => {
+                status.textContent = 'Preusmjeravanje... (Simulacija online plaćanja završena)';
+                status.className = 'form-status ok';
+                cart = [];
+                saveCart();
+                form.reset();
+                setTimeout(closeModals, 2000);
+            }, 1500);
 
-        } catch(err) {
+        } catch (err) {
             console.error("Fetch Error:", err);
-            status.textContent = 'Došlo je do greške. Provjerite podatke i pokušajte ponovo.';
+            status.textContent = 'Došlo je do greške u komunikaciji sa bankom. Pokušajte ponovo.';
             status.className = 'form-status err';
         }
     });
 
-    // Inicijalno ucitavanje korpe
-    renderCartUI();
+    // --- NEWSLETTER ---
+    document.getElementById('manifestForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const status = document.getElementById('manifestStatus');
+        status.style.display = 'block';
+        e.target.reset();
+        showToast('Dodani ste na ekskluzivnu listu.');
+    });
 
+    renderCartUI();
 </script>
 </body>
 </html>
