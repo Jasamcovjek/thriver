@@ -754,7 +754,10 @@
 
     <script>
         // Configuration
-        const ADMIN_TOKEN = 'THRIVER2026ADMINACCESSKEY32'; // 32-character token
+        const ADMIN_TOKENS = [
+            'THRIVER2026ADMINACCESSKEY32',
+            'X7K9M2N4P6Q8R1S3T5U7V9W0Y2Z4A6B8'
+        ]; // Multiple 32-character tokens
         const TOKEN_KEY = 'thriver_admin_token';
 
         // Sample products data
@@ -806,7 +809,7 @@
         // Check if already logged in
         function checkAuth() {
             const savedToken = localStorage.getItem(TOKEN_KEY);
-            if (savedToken === ADMIN_TOKEN) {
+            if (ADMIN_TOKENS.includes(savedToken)) {
                 showDashboard();
             }
         }
@@ -829,7 +832,7 @@
             e.preventDefault();
             const token = tokenInput.value.trim();
             
-            if (token === ADMIN_TOKEN) {
+            if (ADMIN_TOKENS.includes(token)) {
                 localStorage.setItem(TOKEN_KEY, token);
                 showDashboard();
                 errorMsg.style.display = 'none';
