@@ -754,212 +754,215 @@
 
     <script src="admin-config.js"></script>
     <script>
-        // Configuration MUST be loaded from admin-config.js
-        if (!window.ADMIN_CONFIG || !window.ADMIN_CONFIG.tokens) {
-            alert('Error: admin-config.js not found or invalid. Please ensure the config file is present.');
-            document.getElementById('loginForm').innerHTML = '<p style="color: var(--blood); text-align: center; padding: 20px;">Configuration file missing. Contact administrator.</p>';
-        }
-        
-        const TOKEN_KEY = 'thriver_admin_token';
-        const ADMIN_CONFIG = window.ADMIN_CONFIG;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration MUST be loaded from admin-config.js
+            const TOKEN_KEY = 'thriver_admin_token';
+            const ADMIN_CONFIG = window.ADMIN_CONFIG;
 
-        // Sample products data
-        let products = [
-            {
-                id: 1,
-                name: 'Signature Hoodie - Black',
-                price: 49.99,
-                stock: 50,
-                image: 'assets/hoodie-black.jpg',
-                status: 'in-stock'
-            },
-            {
-                id: 2,
-                name: 'Signature Hoodie - White',
-                price: 49.99,
-                stock: 35,
-                image: 'assets/hoodie-white.jpg',
-                status: 'in-stock'
-            },
-            {
-                id: 3,
-                name: 'Signature Hoodie - Red',
-                price: 49.99,
-                stock: 8,
-                image: 'assets/hoodie-red.jpg',
-                status: 'low-stock'
+            if (!ADMIN_CONFIG || !ADMIN_CONFIG.tokens) {
+                alert('Error: admin-config.js not found or invalid. Please ensure the config file is present in the same directory as admin.html.');
+                document.getElementById('loginForm').innerHTML = '<p style="color: var(--blood); text-align: center; padding: 20px;">Configuration file missing. Contact administrator.</p>';
+                return;
             }
-        ];
 
-        // DOM Elements
-        const loginScreen = document.getElementById('loginScreen');
-        const dashboard = document.getElementById('dashboard');
-        const loginForm = document.getElementById('loginForm');
-        const tokenInput = document.getElementById('tokenInput');
-        const errorMsg = document.getElementById('errorMsg');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const navItems = document.querySelectorAll('.nav-item');
-        const sections = document.querySelectorAll('.section');
-        const pageTitle = document.getElementById('pageTitle');
-        const addProductBtn = document.getElementById('addProductBtn');
-        const productModal = document.getElementById('productModal');
-        const closeModal = document.getElementById('closeModal');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const productForm = document.getElementById('productForm');
-        const productsTableBody = document.getElementById('productsTableBody');
-        const modalTitle = document.getElementById('modalTitle');
+            // Sample products data
+            let products = [
+                {
+                    id: 1,
+                    name: 'Signature Hoodie - Black',
+                    price: 49.99,
+                    stock: 50,
+                    image: 'assets/hoodie-black.jpg',
+                    status: 'in-stock'
+                },
+                {
+                    id: 2,
+                    name: 'Signature Hoodie - White',
+                    price: 49.99,
+                    stock: 35,
+                    image: 'assets/hoodie-white.jpg',
+                    status: 'in-stock'
+                },
+                {
+                    id: 3,
+                    name: 'Signature Hoodie - Red',
+                    price: 49.99,
+                    stock: 8,
+                    image: 'assets/hoodie-red.jpg',
+                    status: 'low-stock'
+                }
+            ];
 
-        // Check if already logged in
-        function checkAuth() {
-            const savedToken = localStorage.getItem(TOKEN_KEY);
-            if (ADMIN_CONFIG && ADMIN_CONFIG.tokens && ADMIN_CONFIG.tokens.includes(savedToken)) {
-                showDashboard();
+            // DOM Elements
+            const loginScreen = document.getElementById('loginScreen');
+            const dashboard = document.getElementById('dashboard');
+            const loginForm = document.getElementById('loginForm');
+            const tokenInput = document.getElementById('tokenInput');
+            const errorMsg = document.getElementById('errorMsg');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
+            const pageTitle = document.getElementById('pageTitle');
+            const addProductBtn = document.getElementById('addProductBtn');
+            const productModal = document.getElementById('productModal');
+            const closeModal = document.getElementById('closeModal');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const productForm = document.getElementById('productForm');
+            const productsTableBody = document.getElementById('productsTableBody');
+            const modalTitle = document.getElementById('modalTitle');
+
+            // Check if already logged in
+            function checkAuth() {
+                const savedToken = localStorage.getItem(TOKEN_KEY);
+                if (ADMIN_CONFIG.tokens.includes(savedToken)) {
+                    showDashboard();
+                }
             }
-        }
 
-        // Show dashboard
-        function showDashboard() {
-            loginScreen.style.display = 'none';
-            dashboard.style.display = 'block';
-            loadProducts();
-        }
-
-        // Show login screen
-        function showLogin() {
-            loginScreen.style.display = 'flex';
-            dashboard.style.display = 'none';
-        }
-
-        // Login handler
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const token = tokenInput.value.trim();
-            
-            if (ADMIN_CONFIG && ADMIN_CONFIG.tokens && ADMIN_CONFIG.tokens.includes(token)) {
-                localStorage.setItem(TOKEN_KEY, token);
-                showDashboard();
-                errorMsg.style.display = 'none';
-                tokenInput.value = '';
-            } else {
-                errorMsg.style.display = 'block';
-                tokenInput.value = '';
-            }
-        });
-
-        // Logout handler
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem(TOKEN_KEY);
-            showLogin();
-        });
-
-        // Navigation
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = item.dataset.section;
-                
-                // Update active nav
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-                
-                // Show section
-                sections.forEach(sec => sec.classList.remove('active'));
-                document.getElementById(section).classList.add('active');
-                
-                // Update title
-                pageTitle.textContent = item.textContent.trim();
-            });
-        });
-
-        // Load products table
-        function loadProducts() {
-            productsTableBody.innerHTML = products.map(product => {
-                const stockClass = product.stock > 20 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-stock';
-                const stockText = product.stock > 20 ? 'In Stock' : product.stock > 0 ? 'Low Stock' : 'Out of Stock';
-                
-                return `
-                    <tr>
-                        <td>
-                            <div class="product-info">
-                                <img src="${product.image}" alt="${product.name}" class="product-thumb">
-                                <span>${product.name}</span>
-                            </div>
-                        </td>
-                        <td>€${product.price.toFixed(2)}</td>
-                        <td>${product.stock}</td>
-                        <td><span class="stock-badge ${stockClass}">${stockText}</span></td>
-                        <td>
-                            <button class="action-btn" onclick="editProduct(${product.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" onclick="deleteProduct(${product.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Add product modal
-        addProductBtn.addEventListener('click', () => {
-            modalTitle.textContent = 'Add Product';
-            productForm.reset();
-            productModal.classList.add('active');
-        });
-
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            productModal.classList.remove('active');
-        });
-
-        cancelBtn.addEventListener('click', () => {
-            productModal.classList.remove('active');
-        });
-
-        // Save product
-        productForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const newProduct = {
-                id: Date.now(),
-                name: document.getElementById('productName').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                stock: parseInt(document.getElementById('productStock').value),
-                image: document.getElementById('productImage').value || 'assets/placeholder.jpg',
-                status: parseInt(document.getElementById('productStock').value) > 20 ? 'in-stock' : 
-                        parseInt(document.getElementById('productStock').value) > 0 ? 'low-stock' : 'out-stock'
-            };
-            
-            products.push(newProduct);
-            loadProducts();
-            productModal.classList.remove('active');
-            productForm.reset();
-        });
-
-        // Edit product (placeholder)
-        window.editProduct = function(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                modalTitle.textContent = 'Edit Product';
-                document.getElementById('productName').value = product.name;
-                document.getElementById('productPrice').value = product.price;
-                document.getElementById('productStock').value = product.stock;
-                document.getElementById('productImage').value = product.image;
-                productModal.classList.add('active');
-            }
-        };
-
-        // Delete product
-        window.deleteProduct = function(id) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                products = products.filter(p => p.id !== id);
+            // Show dashboard
+            function showDashboard() {
+                loginScreen.style.display = 'none';
+                dashboard.style.display = 'block';
                 loadProducts();
             }
-        };
 
-        // Initialize
-        checkAuth();
+            // Show login screen
+            function showLogin() {
+                loginScreen.style.display = 'flex';
+                dashboard.style.display = 'none';
+            }
+
+            // Login handler
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const token = tokenInput.value.trim();
+                
+                if (ADMIN_CONFIG.tokens.includes(token)) {
+                    localStorage.setItem(TOKEN_KEY, token);
+                    showDashboard();
+                    errorMsg.style.display = 'none';
+                    tokenInput.value = '';
+                } else {
+                    errorMsg.style.display = 'block';
+                    tokenInput.value = '';
+                }
+            });
+
+            // Logout handler
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem(TOKEN_KEY);
+                showLogin();
+            });
+
+            // Navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+                    
+                    // Update active nav
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // Show section
+                    sections.forEach(sec => sec.classList.remove('active'));
+                    document.getElementById(section).classList.add('active');
+                    
+                    // Update title
+                    pageTitle.textContent = item.textContent.trim();
+                });
+            });
+
+            // Load products table
+            function loadProducts() {
+                productsTableBody.innerHTML = products.map(product => {
+                    const stockClass = product.stock > 20 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-stock';
+                    const stockText = product.stock > 20 ? 'In Stock' : product.stock > 0 ? 'Low Stock' : 'Out of Stock';
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <img src="${product.image}" alt="${product.name}" class="product-thumb">
+                                    <span>${product.name}</span>
+                                </div>
+                            </td>
+                            <td>€${product.price.toFixed(2)}</td>
+                            <td>${product.stock}</td>
+                            <td><span class="stock-badge ${stockClass}">${stockText}</span></td>
+                            <td>
+                                <button class="action-btn" onclick="editProduct(${product.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteProduct(${product.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Add product modal
+            addProductBtn.addEventListener('click', () => {
+                modalTitle.textContent = 'Add Product';
+                productForm.reset();
+                productModal.classList.add('active');
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                productModal.classList.remove('active');
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                productModal.classList.remove('active');
+            });
+
+            // Save product
+            productForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const newProduct = {
+                    id: Date.now(),
+                    name: document.getElementById('productName').value,
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    stock: parseInt(document.getElementById('productStock').value),
+                    image: document.getElementById('productImage').value || 'assets/placeholder.jpg',
+                    status: parseInt(document.getElementById('productStock').value) > 20 ? 'in-stock' : 
+                            parseInt(document.getElementById('productStock').value) > 0 ? 'low-stock' : 'out-stock'
+                };
+                
+                products.push(newProduct);
+                loadProducts();
+                productModal.classList.remove('active');
+                productForm.reset();
+            });
+
+            // Edit product (placeholder)
+            window.editProduct = function(id) {
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    modalTitle.textContent = 'Edit Product';
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productStock').value = product.stock;
+                    document.getElementById('productImage').value = product.image;
+                    productModal.classList.add('active');
+                }
+            };
+
+            // Delete product
+            window.deleteProduct = function(id) {
+                if (confirm('Are you sure you want to delete this product?')) {
+                    products = products.filter(p => p.id !== id);
+                    loadProducts();
+                }
+            };
+
+            // Initialize
+            checkAuth();
+        });
     </script>
 </body>
 </html>
