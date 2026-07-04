@@ -524,6 +524,33 @@ function updatePrices(currency) {
     const convertedSurcharge = convertPrice(PREMIUM_SURCHARGE_EUR, currency);
     const convertedOldPrice = convertPrice(79.99, currency);
 
+    // Override the original script's BASE_PRICE and currentSelectedPrice
+    if (typeof BASE_PRICE !== 'undefined') {
+        window.BASE_PRICE = convertedBasePrice;
+    }
+    if (typeof PREMIUM_SURCHARGE !== 'undefined') {
+        window.PREMIUM_SURCHARGE = convertedSurcharge;
+    }
+    if (typeof currentSelectedPrice !== 'undefined') {
+        window.currentSelectedPrice = convertedBasePrice;
+    }
+
+    // Override the original script's updatePriceDisplay function
+    window.updatePriceDisplay = function() {
+        const price = window.currentSelectedPrice || convertedBasePrice;
+        const formatted = formatPrice(price, currency);
+        
+        const mainPriceDisplay = document.getElementById('mainPriceDisplay');
+        if (mainPriceDisplay) {
+            mainPriceDisplay.textContent = formatted;
+        }
+
+        const stickyPriceDisplay = document.getElementById('stickyPriceDisplay');
+        if (stickyPriceDisplay) {
+            stickyPriceDisplay.textContent = formatted;
+        }
+    };
+
     // Update main price display
     const mainPriceDisplay = document.getElementById('mainPriceDisplay');
     if (mainPriceDisplay) {
@@ -869,11 +896,33 @@ function applyLanguage(lang) {
     // Update console warning
     console.log(`%cSTOP`, "color:#d21f1f; font-weight:bold; font-size:40px; font-family: monospace;");
     console.log(`%c${t.consoleWarning}`, "color:#d21f1f; font-size:14px;");
+
+    // Update order summary total in checkout modal
+    const orderSummaryTotal = document.querySelector('.order-summary-total span:first-child');
+    if (orderSummaryTotal) {
+        orderSummaryTotal.textContent = t.orderSummaryTotal;
+    }
+
+    // Update checkout button in cart drawer
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        checkoutBtn.textContent = t.checkoutBtn;
+    }
 }
 
 // Initialize location detection on page load
 document.addEventListener('DOMContentLoaded', () => {
     detectUserLocation();
+});
+
+// Also run after window load to ensure all scripts are loaded
+window.addEventListener('load', () => {
+    // Re-apply prices after a short delay to ensure original script has finished
+    setTimeout(() => {
+        if (currentCurrency !== 'EUR') {
+            updatePrices(currentCurrency);
+        }
+    }, 500);
 });
 
 // Export function for manual language switching (optional)
