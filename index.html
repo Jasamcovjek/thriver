@@ -1155,8 +1155,17 @@
         const wrap = document.getElementById('cartItems');
         let total = 0, count = 0;
 
+        // Get current language translation for remove button
+        const currentLang = document.documentElement.lang || 'bs';
+        const removeText = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang] 
+            ? TRANSLATIONS[currentLang].removeItem 
+            : (currentLang === 'en' ? 'Remove' : currentLang === 'de' ? 'Entfernen' : 'Ukloni');
+        const cartEmptyText = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang] 
+            ? TRANSLATIONS[currentLang].cartEmpty 
+            : (currentLang === 'en' ? 'Your cart is empty.' : currentLang === 'de' ? 'Ihr Warenkorb ist leer.' : 'Korpa je prazna.');
+
         if (cart.length === 0) {
-            wrap.innerHTML = '<div class="cart-empty"><i class="fas fa-bag-shopping"></i><span>Korpa je prazna.</span></div>';
+            wrap.innerHTML = `<div class="cart-empty"><i class="fas fa-bag-shopping"></i><span>${cartEmptyText}</span></div>`;
         } else {
             wrap.innerHTML = cart.map(i => {
                 total += (i.price * i.qty);
@@ -1172,7 +1181,7 @@
                             <button onclick="changeQty('${i.id}', -1)">−</button>
                             <span style="font-size:0.9rem; width:16px; text-align:center;">${i.qty}</span>
                             <button onclick="changeQty('${i.id}', 1)">+</button>
-                            <button class="remove-item" onclick="changeQty('${i.id}', -999)">Ukloni</button>
+                            <button class="remove-item" onclick="changeQty('${i.id}', -999)">${removeText}</button>
                         </div>
                     </div>
                 </div>`;
@@ -1273,6 +1282,6 @@
 
     renderCartUI();
 </script>
-<script src="language-detector.js"></script>
+<script src="GeneralFunctions.js"></script>
 </body>
 </html>

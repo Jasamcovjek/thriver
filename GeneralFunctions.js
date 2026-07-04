@@ -1,14 +1,15 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║                   GEOLOCATION & CURRENCY DETECTOR                           ║
+ * ║                      GENERAL FUNCTIONS MODULE                                ║
  * ║                                                                              ║
- * ║  Automatically detects user location via IP and adapts:                    ║
- * ║  • Language (Bosnian, English, German)                                       ║
- * ║  • Currency (50+ supported currencies)                                       ║
+ * ║  Comprehensive utility module handling:                                     ║
+ * ║  • Geolocation & Currency Detection (50+ currencies)                       ║
+ * ║  • Language Translation (Bosnian, English, German)                           ║
  * ║  • Price conversion with real-time exchange rates                           ║
+ * ║  • Cookie Consent Management (GDPR Compliance)                               ║
  * ║                                                                              ║
  * ║  Author: coldfusionz                                                         ║
- * ║  Version: 1.2.0                                                              ║
+ * ║  Version: 2.0.0                                                              ║
  * ║  License: MIT                                                                ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  */
@@ -287,7 +288,8 @@ const TRANSLATIONS = {
         error: 'Error communicating with the bank. Please try again.',
         toastAdded: 'Added to cart —',
         toastNewsletter: 'Added to the exclusive list.',
-        consoleWarning: 'This is the developer console. Do not copy and paste other people\'s code here — this can compromise your account and data.'
+        consoleWarning: 'This is the developer console. Do not copy and paste other people\'s code here — this can compromise your account and data.',
+        removeItem: 'Remove'
     },
     'de': {
         lang: 'de',
@@ -388,7 +390,8 @@ const TRANSLATIONS = {
         error: 'Fehler bei der Kommunikation mit der Bank. Bitte versuchen Sie es erneut.',
         toastAdded: 'In den Warenkorb gelegt —',
         toastNewsletter: 'Zur exklusiven Liste hinzugefügt.',
-        consoleWarning: 'Dies ist die Entwicklerkonsole. Kopieren Sie nicht den Code anderer Personen hierher — dies kann Ihr Konto und Ihre Daten gefährden.'
+        consoleWarning: 'Dies ist die Entwicklerkonsole. Kopieren Sie nicht den Code anderer Personen hierher — dies kann Ihr Konto und Ihre Daten gefährden.',
+        removeItem: 'Entfernen'
     },
     'bs': {
         lang: 'bs',
@@ -489,7 +492,8 @@ const TRANSLATIONS = {
         error: 'Došlo je do greške u komunikaciji sa bankom. Pokušajte ponovo.',
         toastAdded: 'Dodano u korpu —',
         toastNewsletter: 'Dodani ste na ekskluzivnu listu.',
-        consoleWarning: 'Ovo je developerska konzola. Ne kopiraj i ne lijepi tuđi kod ovdje — to može ugroziti tvoj nalog i podatke.'
+        consoleWarning: 'Ovo je developerska konzola. Ne kopiraj i ne lijepi tuđi kod ovdje — to može ugroziti tvoj nalog i podatke.',
+        removeItem: 'Ukloni'
     }
 };
 
@@ -908,6 +912,17 @@ function applyLanguage(lang) {
     if (checkoutBtn) {
         checkoutBtn.textContent = t.checkoutBtn;
     }
+
+    // Update remove item buttons in cart
+    const removeButtons = document.querySelectorAll('.remove-item');
+    removeButtons.forEach(btn => {
+        btn.textContent = t.removeItem;
+    });
+
+    // Re-render cart UI if it exists to ensure all cart text is translated
+    if (typeof renderCartUI === 'function') {
+        renderCartUI();
+    }
 }
 
 // Initialize location detection on page load
@@ -921,6 +936,10 @@ window.addEventListener('load', () => {
     setTimeout(() => {
         if (currentCurrency !== 'EUR') {
             updatePrices(currentCurrency);
+        }
+        // Re-render cart to ensure translations are applied
+        if (typeof renderCartUI === 'function') {
+            renderCartUI();
         }
     }, 500);
 });
@@ -939,6 +958,60 @@ window.switchCurrency = function(currency) {
         updatePrices(currency);
     }
 };
+
+// ============================================
+// COOKIE CONSENT MANAGEMENT
+// ============================================
+const COOKIE_CONSENT_KEY = 'thriver_cookie_consent';
+
+function initCookieConsent() {
+    const banner = document.getElementById('cookieBanner');
+    const termsModal = document.getElementById('termsModal');
+    const closeTerms = document.getElementById('closeTerms');
+
+    if (!banner || !termsModal || !closeTerms) return;
+
+    function openTerms(e) {
+        if (e) e.preventDefault();
+        termsModal.classList.add('active');
+    }
+
+    ['openTermsFaq', 'openTermsFooter', 'openTermsCheckout', 'openCookiesFooter', 'openCookiesBanner']
+        .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', openTerms);
+        });
+
+    closeTerms.addEventListener('click', () => termsModal.classList.remove('active'));
+    termsModal.addEventListener('click', (e) => {
+        if (e.target === termsModal) termsModal.classList.remove('active');
+    });
+
+    const saved = localStorage.getItem(COOKIE_CONSENT_KEY);
+    if (!saved) {
+        setTimeout(() => banner.classList.add('show'), 600);
+    }
+
+    const cookieAccept = document.getElementById('cookieAccept');
+    if (cookieAccept) {
+        cookieAccept.addEventListener('click', () => {
+            localStorage.setItem(COOKIE_CONSENT_KEY, 'all');
+            banner.classList.remove('show');
+            // Hook your analytics init here, gated behind consent === 'all'
+        });
+    }
+
+    const cookieDecline = document.getElementById('cookieDecline');
+    if (cookieDecline) {
+        cookieDecline.addEventListener('click', () => {
+            localStorage.setItem(COOKIE_CONSENT_KEY, 'essential');
+            banner.classList.remove('show');
+        });
+    }
+}
+
+// Initialize cookie consent on DOM ready
+document.addEventListener('DOMContentLoaded', initCookieConsent);
 
 // Crafted with precision by coldfusionz
 // © 2026 — All rights reserved
