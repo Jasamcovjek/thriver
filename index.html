@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -641,7 +641,7 @@
     </ul>
     <div class="nav-controls">
         <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-        <a href="#" class="icon-btn" id="cartToggle" aria-label="Open cart">
+        <a href="#" class="icon-btn" id="cartToggle" aria-label="Otvori korpu">
             <i class="fas fa-shopping-bag"></i>
             <span id="cartCount">0</span>
         </a>
@@ -661,45 +661,45 @@
     <div class="gallery-container">
         <div class="main-image-wrapper frame-corners" id="lightboxTrigger">
             <span class="frame-tag mono">Phantom Black</span>
-            <button class="gallery-nav-btn prev-btn" id="galPrev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+            <button class="gallery-nav-btn prev-btn" id="galPrev" aria-label="Prethodna slika"><i class="fas fa-chevron-left"></i></button>
             <img src="assets/blackfront.png" id="mainGalleryImage" alt="Thriver Signature Hoodie">
-            <button class="gallery-nav-btn next-btn" id="galNext" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+            <button class="gallery-nav-btn next-btn" id="galNext" aria-label="Sljedeća slika"><i class="fas fa-chevron-right"></i></button>
             <span class="frame-index mono" id="frameIndex">01 / 03</span>
         </div>
         <div class="thumbnail-strip" id="thumbnailStrip"></div>
     </div>
 
     <div class="product-info">
-        <div class="hang-tag stitched"><i class="fas fa-bolt"></i> Drop 001 — Exclusive Series</div>
+        <div class="hang-tag stitched"><i class="fas fa-bolt"></i> Drop 001 — Ekskluzivna Serija</div>
 
         <h1 class="product-title">The Signature Hoodie</h1>
         <span class="product-sku mono" id="skuLabel">SKU: THR-SIG-HD-BLK</span>
 
-        <p class="product-desc">The crown of premium streetwear. Clean lines, heavyweight materials, and uncompromising design. Made for the streets, built to last. No turning back.</p>
+        <p class="product-desc">Kruna premium streetweara. Čiste linije, teški materijali i beskompromisan dizajn. Stvoren za ulicu, izgrađen da traje. Nema nazad.</p>
 
         <div class="info-tabs">
-            <button class="tab-btn active" data-tab="tabDetails">Details</button>
-            <button class="tab-btn" data-tab="tabMaterial">Materials</button>
-            <button class="tab-btn" data-tab="tabShipping">Policies & Shipping</button>
+            <button class="tab-btn active" data-tab="tabDetails">Detalji</button>
+            <button class="tab-btn" data-tab="tabMaterial">Izrada</button>
+            <button class="tab-btn" data-tab="tabShipping">Pravila & Dostava</button>
         </div>
         <div class="tab-panel active" id="tabDetails">
             <ul>
-                <li>Heavyweight, oversized silhouette — a dominant street fit.</li>
-                <li>Metal YKK zipper with custom THRIVER logo engraving.</li>
-                <li>Hidden message embossed inside the hood.</li>
-                <li>Unisex fit — the model is wearing size M.</li>
+                <li>Teška, oversized silueta — dominantan ulični fit.</li>
+                <li>Metalni YKK zip sa custom gravurom THRIVER loga.</li>
+                <li>Skrivena poruka utisnuta unutar kapuljače.</li>
+                <li>Unisex fit — model nosi veličinu M.</li>
             </ul>
         </div>
         <div class="tab-panel" id="tabMaterial">
-            <p>80% heavyweight cotton / 20% premium polyester, massive 380 GSM fleece. Wash inside out at 30°C, do not bleach, do not tumble dry to maintain the luxury finish and print for years.</p>
+            <p>80% teški pamuk / 20% premium poliester, masivni 380 gsm fleece. Pranje na 30°C naopako, bez izbjeljivača, ne sušiti u mašini kako bi materijal i print zadržali luksuzni finiš godinama.</p>
         </div>
         <div class="tab-panel" id="tabShipping">
-            <p>Custom tailored upon your order in limited batches (delivery in 10-15 business days). Currently, we strictly accept online card payments (cash on delivery coming soon). <strong>No refunds</strong> once the item is tailored and shipped (ToS).</p>
+            <p>Šije se direktno po tvojoj narudžbi u ograničenim serijama (isprouka 10–15 radnih dana). Trenutno isključivo online kartično plaćanje (opcija pouzeća stiže uskoro). <strong>Nema povrata troškova</strong> ukoliko je proizvod već poslan i sašiven (ToS).</p>
         </div>
 
         <div class="scarcity-box">
             <div class="scarcity-label">
-                <span>Reserved from this drop</span>
+                <span>Rezervisano iz ovog dropa</span>
                 <strong id="scarcityCount">42 / 60</strong>
             </div>
             <div class="scarcity-track"><div class="scarcity-fill" id="scarcityFill"></div></div>
@@ -707,7 +707,7 @@
 
         <div class="options-container">
             <div class="option-group">
-                <div class="option-label"><span>Color</span> <span id="colorNameLabel" style="color:white; font-weight:bold;">Phantom Black</span></div>
+                <div class="option-label"><span>Boja</span> <span id="colorNameLabel" style="color:white; font-weight:bold;">Phantom Black</span></div>
                 <div class="color-options">
                     <div class="color-circle active" data-color="black" data-name="Phantom Black" data-sku="BLK" style="background:#111;"></div>
                     <div class="color-circle" data-color="grey" data-name="Cement Grey" data-sku="GRY" style="background:#555;"></div>
@@ -717,7 +717,7 @@
             </div>
 
             <div class="option-group">
-                <div class="option-label"><span>Size</span> <button id="sizeGuideBtn" type="button">Size Guide</button></div>
+                <div class="option-label"><span>Veličina</span> <button id="sizeGuideBtn" type="button">Size Guide</button></div>
                 <div class="size-options">
                     <div class="size-box">S</div>
                     <div class="size-box active">M</div>
@@ -725,22 +725,22 @@
                     <div class="size-box" data-premium="true">XL</div>
                     <div class="size-box" data-premium="true">XXL</div>
                 </div>
-                <div style="font-size: 0.65rem; color: var(--ink-faint); margin-top: 8px; font-family: 'Space Mono', monospace;">* Sizes XL and XXL require more material (+5.00 €).</div>
+                <div style="font-size: 0.65rem; color: var(--ink-faint); margin-top: 8px; font-family: 'Space Mono', monospace;">* Veličine XL i XXL zahtijevaju više materijala (+5.00 €).</div>
             </div>
         </div>
 
         <div class="price-row">
             <span class="price-current" id="mainPriceDisplay">49.99 €</span>
             <span class="price-old">79.99 €</span>
-            <span class="price-save mono">Preorder Discount</span>
+            <span class="price-save mono">Preorder Popust</span>
         </div>
 
-        <button class="add-to-cart-btn" id="addToCartBtn">Preorder Now</button>
+        <button class="add-to-cart-btn" id="addToCartBtn">Prednaruči Odmah</button>
 
         <div class="trust-strip">
-            <div class="trust-item"><i class="fas fa-scissors"></i> Premium Craftsmanship</div>
-            <div class="trust-item"><i class="fas fa-credit-card"></i> Secure Online Payment</div>
-            <div class="trust-item"><i class="fas fa-box-open"></i> Delivery in 10-15 Days</div>
+            <div class="trust-item"><i class="fas fa-scissors"></i> Premium Izrada</div>
+            <div class="trust-item"><i class="fas fa-credit-card"></i> Sigurno Online Plaćanje</div>
+            <div class="trust-item"><i class="fas fa-box-open"></i> Isporuka 10-15 dana</div>
         </div>
     </div>
 </section>
@@ -750,7 +750,7 @@
         <span class="sticky-cta-name">Signature Hoodie</span>
         <span class="sticky-cta-price" id="stickyPriceDisplay">49.99 €</span>
     </div>
-    <button class="sticky-cta-btn" id="stickyCtaBtn">Add to Cart</button>
+    <button class="sticky-cta-btn" id="stickyCtaBtn">Dodaj u Korpu</button>
 </div>
 
 <div class="marquee-wrapper">
@@ -761,30 +761,30 @@
 </div>
 
 <div class="spec-strip reveal">
-    <div class="spec-item"><i class="fas fa-weight-hanging"></i><h5>380 GSM</h5><p>Heavyweight solid cotton</p></div>
-    <div class="spec-item"><i class="fas fa-shirt"></i><h5>Oversized Fit</h5><p>Authentic street silhouette</p></div>
-    <div class="spec-item"><i class="fas fa-gem"></i><h5>Premium Feel</h5><p>Details that separate you from the crowd</p></div>
-    <div class="spec-item"><i class="fas fa-shield-halved"></i><h5>Built for life</h5><p>Reinforced stitching</p></div>
+    <div class="spec-item"><i class="fas fa-weight-hanging"></i><h5>380 GSM</h5><p>Teški masivni pamuk</p></div>
+    <div class="spec-item"><i class="fas fa-shirt"></i><h5>Oversized Fit</h5><p>Autentična ulična silueta</p></div>
+    <div class="spec-item"><i class="fas fa-gem"></i><h5>Premium Feel</h5><p>Detalji koji odvajaju od mase</p></div>
+    <div class="spec-item"><i class="fas fa-shield-halved"></i><h5>Doživotna izrada</h5><p>Ojačani šavovi</p></div>
 </div>
 
 <section class="lore-section" id="ethos">
     <div class="section-eyebrow mono">The Manifesto</div>
-    <h2 class="lore-title reveal">We are not here to talk. We are here to take over.</h2>
+    <h2 class="lore-title reveal">Nismo ovdje da pričamo. Ovdje smo da preuzmemo.</h2>
     <div class="lore-grid">
         <div class="lore-card reveal">
             <span class="lore-tag mono">[ Quality ]</span>
             <h3>Uncompromising Quality</h3>
-            <p>We reject mass production. We strictly use the highest quality materials (80% heavy cotton, 380 GSM). Every piece is tailored to deliver pure luxury and comfort to the streets.</p>
+            <p>Odbijamo masovnu proizvodnju. Koristimo samo najkvalitetnije materijale (80% teški pamuk, 380 GSM). Svaki komad je krojen da ponudi čist luksuz i udobnost na ulici.</p>
         </div>
         <div class="lore-card reveal">
             <span class="lore-tag mono">[ Detail ]</span>
             <h3>Hidden Details</h3>
-            <p>Aesthetics lie in the details. A minimalist logo, a powerful message on the back, custom-engraved metal YKK zippers, and a sharp design create a piece you must own the moment you see it.</p>
+            <p>Estetika je u detaljima. Minimalistički logo, snažna poruka na leđima, metalni YKK zatvarači sa gravurom i oštar dizajn kreiraju komad koji moraš imati čim ga vidiš.</p>
         </div>
         <div class="lore-card reveal">
             <span class="lore-tag mono">[ Movement ]</span>
             <h3>The Movement</h3>
-            <p>Thriver is not just merch. It is a streetwear brand for those who hustle in silence. When you wear Thriver, you carry a mentality, a clean aesthetic, and belong to a circle of those who know exactly what they want.</p>
+            <p>Thriver nije merch. To je streetwear brend za one koji rade u tišini. Kad obučeš Thriver, nosiš mentalitet, čistu estetiku i pripadaš krugu onih koji znaju šta žele.</p>
         </div>
     </div>
 </section>
@@ -804,12 +804,12 @@
 
 <section class="reports-section" id="reports">
     <div class="section-eyebrow mono">Field Reports</div>
-    <h2 class="lore-title reveal">Front-row impressions.</h2>
+    <h2 class="lore-title reveal">Utisci iz prvog reda.</h2>
     <div class="reports-grid">
         <div class="report-card reveal">
             <span class="report-stamp mono">Verified</span>
             <div class="report-stars">★★★★★</div>
-            <p class="report-quote">This hoodie is insane. The material quality and that premium feel are instantly noticeable. I never take it off.</p>
+            <p class="report-quote">Ovaj duks je ludilo. Kvalitet materijala i taj premium feel se odmah osjeti. Ne skidam ga.</p>
             <div class="report-author">
                 <div class="report-avatar mono">AH</div>
                 <div><div class="report-author-name">Amar H.</div><div class="report-author-meta">Sarajevo · Phantom Black, L</div></div>
@@ -818,7 +818,7 @@
         <div class="report-card reveal">
             <span class="report-stamp mono">Verified</span>
             <div class="report-stars">★★★★★</div>
-            <p class="report-quote">Clean aesthetic. The zipper details and the cut are exactly what I needed for everyday wear.</p>
+            <p class="report-quote">Clean estetika. Detalji na zipu i kroj su tačno ono što mi je trebalo za svaki dan.</p>
             <div class="report-author">
                 <div class="report-avatar mono">LM</div>
                 <div><div class="report-author-name">Lamija M.</div><div class="report-author-meta">Tuzla · Vintage Bone, M</div></div>
@@ -827,7 +827,7 @@
         <div class="report-card reveal">
             <span class="report-stamp mono">Verified</span>
             <div class="report-stars">★★★★☆</div>
-            <p class="report-quote">It takes a bit longer since it's custom made to order, but bro, it's worth every cent. Top-tier streetwear.</p>
+            <p class="report-quote">Malo se duže čeka jer se šije po narudžbi, ali brate isplati se svaki cent. Vrhunski streetwear.</p>
             <div class="report-author">
                 <div class="report-avatar mono">DK</div>
                 <div><div class="report-author-name">Denis K.</div><div class="report-author-meta">Mostar · Cement Grey, XL</div></div>
@@ -837,20 +837,20 @@
 </section>
 
 <div class="manifest-section reveal">
-    <h2>Exclusive Access</h2>
-    <p>Join the waitlist and be the first to know when the next drop happens. No spam, just pure street aesthetic.</p>
+    <h2>Ekskluzivni Pristup</h2>
+    <p>Prijavi se na listu i budi prvi koji zna kad izađe sljedeći drop. Bez spama, samo čista ulična estetika.</p>
     <form class="manifest-form" id="manifestForm">
-        <input type="email" placeholder="your@email.com" required>
-        <button type="submit">Subscribe</button>
+        <input type="email" placeholder="tvoj@email.com" required>
+        <button type="submit">Prijavi Se</button>
     </form>
-    <p class="manifest-status" id="manifestStatus">Success! Welcome to the circle.</p>
+    <p class="manifest-status" id="manifestStatus">Uspješno! Dobrodošao u krug.</p>
 </div>
 
 <footer>
     <div class="footer-grid">
         <div class="footer-brand">
             <h1>THRIVER</h1>
-            <p>Founded in silence. Built through the grind. Thriver is a premium streetwear brand dedicated to those who strive for perfection without needing applause. Est. 2025.</p>
+            <p>Osnovano u tišini. Izgrađeno kroz rad. Thriver je premium streetwear brend posvećen onima koji teže savršenstvu bez potrebe za aplauzom. Est. 2025.</p>
             <div class="social-links">
                 <a href="https://www.instagram.com/thriver.wear/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="https://www.tiktok.com/@thriver.wear" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
@@ -860,16 +860,16 @@
             <h4>Shop</h4>
             <ul>
                 <li><a href="#top">The Signature Drop</a></li>
-                <li><a href="#" id="footerSizeGuide">Sizing & Fit</a></li>
-                <li><a href="#">Track Order</a></li>
+                <li><a href="#" id="footerSizeGuide">Veličine i Fit</a></li>
+                <li><a href="#">Praćenje Narudžbe</a></li>
             </ul>
         </div>
         <div class="footer-links">
-            <h4>Support & Policies</h4>
+            <h4>Podrška & Pravila</h4>
             <ul>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Kontaktiraj Nas</a></li>
                 <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Cookie Policy</a></li>
+                <li><a href="#">Politika Kolačića</a></li>
             </ul>
         </div>
     </div>
@@ -883,23 +883,23 @@
 
 <aside class="cart-drawer" id="cartDrawer">
     <div class="cart-header">
-        <h3>Your Cart</h3>
-        <button class="close-btn" id="closeCart" aria-label="Close cart"><i class="fas fa-xmark"></i></button>
+        <h3>Tvoja Korpa</h3>
+        <button class="close-btn" id="closeCart" aria-label="Zatvori korpu"><i class="fas fa-xmark"></i></button>
     </div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer">
-        <div class="cart-total-row"><span>Total</span><span id="cartTotal">0.00 €</span></div>
-        <button class="add-to-cart-btn" id="checkoutBtn" style="padding:18px; font-size:0.95rem;">Proceed to Checkout</button>
-        <p class="cart-note">Online card payments only. Cash on delivery coming soon.</p>
+        <div class="cart-total-row"><span>Ukupno</span><span id="cartTotal">0.00 €</span></div>
+        <button class="add-to-cart-btn" id="checkoutBtn" style="padding:18px; font-size:0.95rem;">Idi na Plaćanje</button>
+        <p class="cart-note">Plaćanje isključivo online (karticom). Pouzeće uskoro.</p>
     </div>
 </aside>
 
 <div class="modal" id="sizeGuideModal">
     <button class="modal-close" id="closeSizeGuide"><i class="fas fa-xmark"></i></button>
     <h2>Size Guide</h2>
-    <p class="sub">Measurements are in centimeters, taken flat across the garment.</p>
+    <p class="sub">Mjere su u centimetrima, izmjerene ravno na proizvodu.</p>
     <table class="size-table">
-        <thead><tr><th>Size</th><th>Chest</th><th>Length</th><th>Sleeve</th></tr></thead>
+        <thead><tr><th>Veličina</th><th>Grudi</th><th>Dužina</th><th>Rukav</th></tr></thead>
         <tbody>
             <tr><td>S</td><td>58</td><td>68</td><td>62</td></tr>
             <tr><td>M</td><td>61</td><td>70</td><td>64</td></tr>
@@ -908,51 +908,51 @@
             <tr><td>XXL</td><td>70</td><td>76</td><td>70</td></tr>
         </tbody>
     </table>
-    <p class="size-guide-note">The fit is oversized by design — for a more standard fit, size down from your usual size. <br><span style="color:var(--blood)">* XL and XXL include a slight price premium due to higher material consumption.</span></p>
+    <p class="size-guide-note">Fit je oversized po dizajnu — za striktniji fit uzmi veličinu manju od uobičajene. <br><span style="color:var(--blood)">* XL i XXL uključuju dodatak na cijenu zbog veće potrošnje materijala.</span></p>
 </div>
 
 <div class="modal" id="checkoutModal">
     <button class="modal-close" id="closeCheckout"><i class="fas fa-xmark"></i></button>
-    <h2>Complete Purchase</h2>
-    <p class="sub">Secure online checkout. (Cash on delivery option coming soon).</p>
+    <h2>Završi Kupovinu</h2>
+    <p class="sub">Sigurna online naplata. (Opcija plaćanja pouzećem stiže uskoro).</p>
 
     <div class="order-summary" id="orderSummary"></div>
 
     <form id="checkoutForm">
-        <div class="form-group"><input type="text" name="name" placeholder="Full Name" required></div>
+        <div class="form-group"><input type="text" name="name" placeholder="Ime i Prezime" required></div>
         <div class="form-row">
-            <div class="form-group" style="margin-bottom:0;"><input type="tel" name="phone" placeholder="Phone Number" required></div>
-            <div class="form-group" style="margin-bottom:0;"><input type="email" name="email" placeholder="Email Address" required></div>
+            <div class="form-group" style="margin-bottom:0;"><input type="tel" name="phone" placeholder="Broj Telefona" required></div>
+            <div class="form-group" style="margin-bottom:0;"><input type="email" name="email" placeholder="Email Adresa" required></div>
         </div>
-        <div class="form-group"><input type="text" name="address" placeholder="Home Address (Street and number)" required></div>
+        <div class="form-group"><input type="text" name="address" placeholder="Adresa Stanovanja (Ulica i broj)" required></div>
         <div class="form-row">
-            <div class="form-group" style="margin-bottom:0;"><input type="text" name="city" placeholder="City" required></div>
-            <div class="form-group" style="margin-bottom:0;"><input type="text" name="zip" placeholder="ZIP Code" required></div>
+            <div class="form-group" style="margin-bottom:0;"><input type="text" name="city" placeholder="Grad" required></div>
+            <div class="form-group" style="margin-bottom:0;"><input type="text" name="zip" placeholder="Poštanski Broj" required></div>
         </div>
         
         <!-- Obavezni ToS Checkbox -->
         <div class="checkbox-group">
             <input type="checkbox" id="tosAccept" name="tosAccept" required>
             <label for="tosAccept">
-                I accept the <strong>Terms of Service</strong> (No right to a refund once the hoodie is tailored and shipped) and the <strong>Cookie Policy</strong>.
+                Prihvatam <strong>Terms of Service</strong> (Bez prava na povrat troškova nakon što je duks poslan i sašiven) i <strong>Politiku Kolačića (Cookies)</strong>.
             </label>
         </div>
 
-        <button type="submit" class="add-to-cart-btn" style="padding:16px; font-size:1rem;">Proceed to secure checkout <i class="fas fa-lock" style="margin-left: 8px; font-size: 0.85rem;"></i></button>
+        <button type="submit" class="add-to-cart-btn" style="padding:16px; font-size:1rem;">Idi na sigurnu naplatu <i class="fas fa-lock" style="margin-left: 8px; font-size: 0.85rem;"></i></button>
         <p id="formStatus" class="form-status"></p>
     </form>
 </div>
 
 <div class="lightbox" id="lightbox">
     <button class="lightbox-close" id="lightboxClose"><i class="fas fa-xmark"></i></button>
-    <img src="" id="lightboxImg" alt="Enlarged product view">
+    <img src="" id="lightboxImg" alt="Uvećan prikaz proizvoda">
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
     console.log("%cSTOP", "color:#d21f1f; font-weight:bold; font-size:40px; font-family: monospace;");
-    console.log("%cThis is a developer console. Do not copy or paste someone else's code here — it may compromise your account and data.", "color:#d21f1f; font-size:14px;");
+    console.log("%cOvo je developerska konzola. Ne kopiraj i ne lijepi tuđi kod ovdje — to može ugroziti tvoj nalog i podatke.", "color:#d21f1f; font-size:14px;");
 
     // --- BASE PRICE LOGIC ---
     const BASE_PRICE = 49.99;
@@ -1130,7 +1130,7 @@
 
         saveCart();
         openCartDrawer();
-        showToast(`Added to cart — ${colorName}, ${size}`);
+        showToast(`Dodano u korpu — ${colorName}, ${size}`);
     }
 
     document.getElementById('addToCartBtn').addEventListener('click', addToCart);
@@ -1156,7 +1156,7 @@
         let total = 0, count = 0;
 
         if (cart.length === 0) {
-            wrap.innerHTML = '<div class="cart-empty"><i class="fas fa-bag-shopping"></i><span>Your cart is empty.</span></div>';
+            wrap.innerHTML = '<div class="cart-empty"><i class="fas fa-bag-shopping"></i><span>Korpa je prazna.</span></div>';
         } else {
             wrap.innerHTML = cart.map(i => {
                 total += (i.price * i.qty);
@@ -1172,7 +1172,7 @@
                             <button onclick="changeQty('${i.id}', -1)">−</button>
                             <span style="font-size:0.9rem; width:16px; text-align:center;">${i.qty}</span>
                             <button onclick="changeQty('${i.id}', 1)">+</button>
-                            <button class="remove-item" onclick="changeQty('${i.id}', -999)">Remove</button>
+                            <button class="remove-item" onclick="changeQty('${i.id}', -999)">Ukloni</button>
                         </div>
                     </div>
                 </div>`;
@@ -1213,7 +1213,7 @@
         const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
         wrap.innerHTML = cart.map(i => `
             <div class="order-summary-row"><span>${i.name} × ${i.qty}</span><span>${(i.price * i.qty).toFixed(2)} €</span></div>
-        `).join('') + `<div class="order-summary-total"><span>Total to pay (Card)</span><span>${total.toFixed(2)} €</span></div>`;
+        `).join('') + `<div class="order-summary-total"><span>Ukupno za platiti (Kartica)</span><span>${total.toFixed(2)} €</span></div>`;
     }
 
     // --- CHECKOUT SUBMIT (WITH TOS CHECK) ---
@@ -1229,7 +1229,7 @@
 
         const payload = { customer: customer, items: cart, total: totalVal };
 
-        status.textContent = 'Connecting to payment gateway...';
+        status.textContent = 'Konektovanje na payment gateway...';
         status.className = 'form-status';
         status.style.display = 'block';
 
@@ -1247,7 +1247,7 @@
             */
             
             setTimeout(() => {
-                status.textContent = 'Redirecting... (Secure payment simulation completed)';
+                status.textContent = 'Preusmjeravanje... (Simulacija online plaćanja završena)';
                 status.className = 'form-status ok';
                 cart = [];
                 saveCart();
@@ -1257,7 +1257,7 @@
 
         } catch (err) {
             console.error("Fetch Error:", err);
-            status.textContent = 'An error occurred while communicating with the bank. Please try again.';
+            status.textContent = 'Došlo je do greške u komunikaciji sa bankom. Pokušajte ponovo.';
             status.className = 'form-status err';
         }
     });
@@ -1268,10 +1268,11 @@
         const status = document.getElementById('manifestStatus');
         status.style.display = 'block';
         e.target.reset();
-        showToast('You have been added to the exclusive waitlist.');
+        showToast('Dodani ste na ekskluzivnu listu.');
     });
 
     renderCartUI();
 </script>
+<script src="language-detector.js"></script>
 </body>
 </html>
