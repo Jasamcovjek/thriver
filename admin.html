@@ -756,6 +756,14 @@
     <script>
         // Configuration is loaded from admin-config.js
         const TOKEN_KEY = 'thriver_admin_token';
+        
+        // Fallback config if admin-config.js fails to load
+        const ADMIN_CONFIG = window.ADMIN_CONFIG || {
+            tokens: [
+                'THRIVER2026ADMINACCESSKEY32',
+                'X7K9M2N4P6Q8R1S3T5U7V9W0Y2Z4A6B8'
+            ]
+        };
 
         // Sample products data
         let products = [
@@ -828,15 +836,20 @@
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const token = tokenInput.value.trim();
+            console.log('Login attempt with token:', token);
+            console.log('ADMIN_CONFIG:', ADMIN_CONFIG);
+            console.log('Tokens:', ADMIN_CONFIG.tokens);
             
             if (ADMIN_CONFIG && ADMIN_CONFIG.tokens && ADMIN_CONFIG.tokens.includes(token)) {
                 localStorage.setItem(TOKEN_KEY, token);
                 showDashboard();
                 errorMsg.style.display = 'none';
                 tokenInput.value = '';
+                console.log('Login successful');
             } else {
                 errorMsg.style.display = 'block';
                 tokenInput.value = '';
+                console.log('Login failed');
             }
         });
 
