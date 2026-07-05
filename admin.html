@@ -755,13 +755,12 @@
     <script src="admin-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Configuration MUST be loaded from admin-config.js
             const TOKEN_KEY = 'thriver_admin_token';
             const ADMIN_CONFIG = window.ADMIN_CONFIG;
 
             if (!ADMIN_CONFIG || !ADMIN_CONFIG.tokens) {
-                alert('Error: admin-config.js not found or invalid. Please ensure the config file is present in the same directory as admin.html.');
-                document.getElementById('loginForm').innerHTML = '<p style="color: var(--blood); text-align: center; padding: 20px;">Configuration file missing. Contact administrator.</p>';
+                alert('Error: admin-config.js not found. For local testing, ensure admin-config.js is in the same directory as admin.html.');
+                document.getElementById('loginForm').innerHTML = '<p style="color: var(--blood); text-align: center; padding: 20px;">Configuration file missing. Ensure admin-config.js exists in the same directory.</p>';
                 return;
             }
 
