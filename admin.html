@@ -752,17 +752,17 @@
         </div>
     </div>
 
-    <script src="admin-config.js"></script>
     <script>
+        // Admin Configuration
+        const ADMIN_CONFIG = {
+            tokens: [
+                'THRIVER2026ADMINACCESSKEY32',
+                'X7K9M2N4P6Q8R1S3T5U7V9W0Y2Z4A6B8'
+            ]
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             const TOKEN_KEY = 'thriver_admin_token';
-            const ADMIN_CONFIG = window.ADMIN_CONFIG;
-
-            if (!ADMIN_CONFIG || !ADMIN_CONFIG.tokens) {
-                alert('Error: admin-config.js not found. For local testing, ensure admin-config.js is in the same directory as admin.html.');
-                document.getElementById('loginForm').innerHTML = '<p style="color: var(--blood); text-align: center; padding: 20px;">Configuration file missing. Ensure admin-config.js exists in the same directory.</p>';
-                return;
-            }
 
             // Sample products data
             let products = [
